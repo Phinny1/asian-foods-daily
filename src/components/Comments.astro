@@ -1,0 +1,270 @@
+---
+const { slug } = Astro.props;
+
+// Simple math captcha
+const num1 = Math.floor(Math.random() * 10);
+const num2 = Math.floor(Math.random() * 10);
+const captchaAnswer = (num1 + num2).toString();
+---
+
+<div class="mt-16 pt-8 border-t border-gray-200" data-ps="src/components/Comments.astro:mxodmm">
+  <h2 class="text-2xl font-bold mb-8 text-gray-900" data-ps="src/components/Comments.astro:wy8hb9">Post your Comment</h2>
+
+  <form id="comment-form" class="space-y-6 bg-gray-50 p-6 rounded-2xl border border-gray-100 mb-12">
+    <input type="hidden" name="slug" value={slug} />
+    <input type="hidden" name="captchaAnswer" value={captchaAnswer} />
+    <input type="hidden" name="parentId" id="parent-id-input" value="" />
+
+    <div id="replying-to" class="hidden items-center justify-between bg-blue-50 p-3 rounded-lg border border-blue-100" data-ps="src/components/Comments.astro:mxodmn">
+      <span class="text-sm text-blue-700" data-ps="src/components/Comments.astro:dslb8g">Replying to <span id="replying-to-name" class="font-bold" data-ps="src/components/Comments.astro:dslb8h"></span></span>
+      <button type="button" id="cancel-reply" class="text-xs text-blue-600 hover:underline" data-ps="src/components/Comments.astro:aaev45">Cancel Reply</button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" data-ps="src/components/Comments.astro:mxodmo">
+      <div data-ps="src/components/Comments.astro:mxodmp">
+        <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+        <input type="text" name="username" id="username" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all outline-none" placeholder="Your name" />
+      </div>
+      <div data-ps="src/components/Comments.astro:mxodmq">
+        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email (not published)</label>
+        <input type="email" name="email" id="email" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all outline-none" placeholder="your@email.com" />
+      </div>
+    </div>
+
+    <div data-ps="src/components/Comments.astro:mxodmr">
+      <label class="block text-sm font-medium text-gray-700 mb-2">Your Rating</label>
+      <div class="flex gap-2" id="star-rating" data-ps="src/components/Comments.astro:mxodms">
+        {[1, 2, 3, 4, 5].map((num) => (
+          <button type="button" data-rating={num} class="star-btn text-2xl text-gray-600 hover:text-yellow-400 transition-colors" data-ps="src/components/Comments.astro:aaev44">★</button>
+        ))}
+        <input type="hidden" name="rating" id="rating-input" value="0" />
+      </div>
+    </div>
+
+    <div data-ps="src/components/Comments.astro:mxodmt">
+      <label for="content" class="block text-sm font-medium text-gray-700 mb-1">Comment</label>
+      <textarea name="content" id="content" rows="4" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all outline-none" placeholder="Share your thoughts or recipe tips..."></textarea>
+    </div>
+
+    <div class="flex flex-col md:flex-row md:items-end gap-6" data-ps="src/components/Comments.astro:mxodmu">
+      <div class="w-48" data-ps="src/components/Comments.astro:mxodmv">
+        <label for="captcha" class="block text-sm font-medium text-gray-700 mb-1">Captcha: {num1} + {num2} = ?</label>
+        <input type="text" name="captcha" id="captcha" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all outline-none" placeholder="Answer" />
+      </div>
+      <button type="submit" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg transition-all shadow-lg shadow-red-200 active:scale-95" data-ps="src/components/Comments.astro:aaev43">
+        Submit Comment
+      </button>
+    </div>
+  </form>
+
+  <div id="comments-section" class="space-y-8" data-ps="src/components/Comments.astro:ov6s1">
+    <h3 id="comments-count" class="text-xl font-bold text-gray-900 border-b border-gray-100 pb-4" data-ps="src/components/Comments.astro:i9tk3o">Loading comments...</h3>
+    <div id="comments-list" class="space-y-8" data-ps="src/components/Comments.astro:ov6s2"></div>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('comment-form') as HTMLFormElement;
+  const ratingBtns = document.querySelectorAll('.star-btn');
+  const ratingInput = document.getElementById('rating-input') as HTMLInputElement;
+  const parentIdInput = document.getElementById('parent-id-input') as HTMLInputElement;
+  const replyingTo = document.getElementById('replying-to');
+  const replyingToName = document.getElementById('replying-to-name');
+  const cancelReply = document.getElementById('cancel-reply');
+  const commentsCount = document.getElementById('comments-count');
+  const commentsList = document.getElementById('comments-list');
+
+  // Get slug from the hidden form field
+  const slugInput = form?.querySelector('input[name="slug"]') as HTMLInputElement;
+  const postSlug = slugInput?.value || '';
+
+  // Fetch and render approved comments from API
+  async function loadComments() {
+    if (!postSlug) return;
+    try {
+      const res = await fetch(`/api/comments/?slug=${encodeURIComponent(postSlug)}`);
+      const { comments = [] } = await res.json();
+
+      const mainComments = comments.filter((c: any) => !c.parent_id);
+      const replies = comments.filter((c: any) => c.parent_id);
+
+      if (commentsCount) {
+        commentsCount.textContent = `${comments.length} Comment${comments.length !== 1 ? 's' : ''}`;
+      }
+
+      if (!commentsList) return;
+
+      if (mainComments.length === 0) {
+        commentsList.innerHTML = '<p class="text-gray-600 italic">No comments yet. Be the first to share your thoughts!</p>';
+        return;
+      }
+
+      commentsList.innerHTML = mainComments.map((comment: any) => {
+        const commentReplies = replies.filter((r: any) => r.parent_id === comment.id);
+        const stars = comment.rating
+          ? `<div class="flex gap-1 mb-2">${[...Array(5)].map((_, i) =>
+              `<span class="${i < comment.rating ? 'text-yellow-400 text-sm' : 'text-gray-200 text-sm'}">★</span>`
+            ).join('')}</div>`
+          : '';
+
+        const repliesHtml = commentReplies.length > 0
+          ? `<div class="mt-6 ml-4 pl-4 border-l-2 border-gray-100 space-y-6">
+              ${commentReplies.map((reply: any) => `
+                <div class="flex gap-3">
+                  <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 text-xs font-bold shrink-0">
+                    ${reply.username.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <div class="flex items-center justify-between mb-1">
+                      <span class="font-bold text-gray-800 text-sm">${escapeHtml(reply.username)}</span>
+                      <span class="text-[10px] text-gray-400">${new Date(reply.created_at).toLocaleDateString()}</span>
+                    </div>
+                    <p class="text-gray-600 text-sm leading-relaxed">${escapeHtml(reply.content)}</p>
+                  </div>
+                </div>
+              `).join('')}
+            </div>`
+          : '';
+
+        return `
+          <div class="group">
+            <div class="flex gap-4">
+              <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-700 font-bold shrink-0">
+                ${comment.username.charAt(0).toUpperCase()}
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="font-bold text-gray-900">${escapeHtml(comment.username)}</span>
+                  <span class="text-xs text-gray-400">${new Date(comment.created_at).toLocaleDateString()}</span>
+                </div>
+                ${stars}
+                <p class="text-gray-700 leading-relaxed mb-3">${escapeHtml(comment.content)}</p>
+                <button type="button" class="reply-btn text-sm font-semibold text-red-700 hover:text-red-700 flex items-center gap-1"
+                  data-id="${comment.id}" data-username="${escapeHtml(comment.username)}">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17l-5-5 5-5M20 18v-2a4 4 0 0 0-4-4H4"/></svg>
+                  Reply
+                </button>
+                ${repliesHtml}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Rebind reply buttons after rendering
+      bindReplyButtons();
+    } catch (e) {
+      console.warn('Failed to load comments:', e);
+      if (commentsCount) commentsCount.textContent = 'Comments';
+      if (commentsList) commentsList.innerHTML = '<p class="text-gray-600 italic">No comments yet. Be the first to share your thoughts!</p>';
+    }
+  }
+
+  function escapeHtml(str: string) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function bindReplyButtons() {
+    document.querySelectorAll('.reply-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id');
+        const username = btn.getAttribute('data-username');
+        if (parentIdInput) parentIdInput.value = id || '';
+        if (replyingToName) replyingToName.textContent = username;
+        replyingTo?.classList.remove('hidden');
+        replyingTo?.classList.add('flex');
+        form?.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  }
+
+  // Star rating logic
+  if (ratingBtns) {
+    ratingBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const rating = btn.getAttribute('data-rating');
+        if (ratingInput) ratingInput.value = rating || '0';
+
+        ratingBtns.forEach(b => {
+          const bRating = b.getAttribute('data-rating');
+          const currentRating = parseInt(rating || '0');
+          const buttonRating = parseInt(bRating || '0');
+
+          if (buttonRating <= currentRating) {
+            b.classList.add('text-yellow-400');
+            b.classList.remove('text-gray-600');
+          } else {
+            b.classList.remove('text-yellow-400');
+            b.classList.add('text-gray-600');
+          }
+        });
+      });
+    });
+  }
+
+  cancelReply?.addEventListener('click', () => {
+    if (parentIdInput) parentIdInput.value = '';
+    replyingTo?.classList.add('hidden');
+    replyingTo?.classList.remove('flex');
+  });
+
+  // Form submission
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+    const originalBtnText = submitBtn.textContent;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+
+    const formData = new FormData();
+    const elements = form.elements as any;
+
+    formData.append('slug', elements.slug.value);
+    formData.append('username', elements.username.value);
+    formData.append('email', elements.email.value);
+    formData.append('content', elements.content.value);
+    formData.append('rating', elements.rating.value || '0');
+    formData.append('parentId', elements.parentId.value || '');
+    formData.append('captcha', elements.captcha.value);
+    formData.append('captchaAnswer', elements.captchaAnswer.value);
+
+    try {
+      const response = await fetch('/api/comments/', {
+        method: 'POST',
+        body: formData,
+      });
+
+      let result;
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        result = await response.json();
+      } else {
+        const text = await response.text();
+        console.error('Non-JSON response:', text);
+        throw new Error('Server returned an unexpected response format');
+      }
+
+      if (response.ok) {
+        alert('Comment submitted successfully! It will appear after approval.');
+        form.reset();
+        if (parentIdInput) parentIdInput.value = '';
+        replyingTo?.classList.add('hidden');
+        loadComments();
+      } else {
+        alert(result.error || 'Something went wrong while saving your comment.');
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      alert(error instanceof Error ? error.message : 'Failed to post comment. Please try again.');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText;
+    }
+  });
+
+  // Load comments on page load
+  loadComments();
+</script>

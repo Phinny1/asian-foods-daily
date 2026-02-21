@@ -1,0 +1,103 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const cuisines = [
+    { slug: 'chinese', name: 'Chinese' },
+    { slug: 'thai', name: 'Thai' },
+    { slug: 'korean', name: 'Korean' },
+    { slug: 'japanese', name: 'Japanese' },
+    { slug: 'vietnamese', name: 'Vietnamese' },
+    { slug: 'filipino', name: 'Filipino' },
+  ];
+
+  return cuisines.map(c => ({
+    params: { cuisine: c.slug },
+    props: { name: c.name },
+  }));
+}
+
+const { cuisine } = Astro.params;
+const { name } = Astro.props;
+
+const recipes = await getCollection('recipes', (entry) => {
+  const data = entry?.data;
+  if (!data?.title || data.draft === true) return false;
+  return (data.category || '').toLowerCase() === cuisine;
+});
+
+const sortedRecipes = recipes.sort(
+  (a, b) => (b.data?.pubDate?.valueOf() || 0) - (a.data?.pubDate?.valueOf() || 0)
+);
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": `${name} Cuisine - Asian Foods Daily`,
+  "description": `Explore authentic ${name} recipes and cooking techniques.`
+};
+---
+
+<BaseLayout title={`${name} Cuisine`} description={`Discover authentic ${name} recipes, from classic favorites to modern twists.`} jsonLd={jsonLd}>
+  <main class="pt-32 pb-24">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto text-center mb-20">
+        <h1 class="text-5xl md:text-7xl font-black text-zinc-900 mb-6 tracking-tighter uppercase italic">
+          {name} <span class="text-red-600">Cuisine</span>
+        </h1>
+        <p class="text-xl text-zinc-600 leading-relaxed">
+          Master the art of {name} cooking with our curated collection of authentic recipes.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        {sortedRecipes.map((recipe) => (
+          <a href={`/recipes/${recipe.slug}`} class="group flex flex-col bg-white rounded-3xl overflow-hidden border border-zinc-100 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+            <div class="relative aspect-video overflow-hidden">
+              <img
+                src={recipe.data.image}
+                alt={recipe.data.title}
+                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                <span class="text-white font-bold flex items-center gap-2">
+                  Read Recipe
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+                </span>
+              </div>
+            </div>
+            <div class="p-8">
+              <span class="inline-block px-4 py-1.5 bg-red-50 text-red-600 text-xs font-black uppercase tracking-widest rounded-full mb-4">
+                {name}
+              </span>
+              <h3 class="text-2xl font-black text-zinc-900 leading-tight group-hover:text-red-600 transition-colors mb-4 italic">
+                {recipe.data.title}
+              </h3>
+              <p class="text-zinc-500 line-clamp-2 leading-relaxed mb-6">
+                {recipe.data.description}
+              </p>
+              <div class="flex items-center justify-between gap-3 mt-auto pt-6 border-t border-zinc-50">
+                <span class="text-sm font-bold text-red-600 uppercase tracking-widest flex items-center gap-2 group-hover:gap-3 transition-all">
+                  View recipe
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+                </span>
+                <span class="text-sm font-bold text-zinc-400 uppercase tracking-wider">{recipe.data.pubDate?.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      {sortedRecipes.length === 0 && (
+        <div class="text-center py-32 bg-zinc-50 rounded-3xl border-2 border-dashed border-zinc-200">
+          <p class="text-2xl font-bold text-zinc-400 italic">No {name} recipes found yet. Check back soon!</p>
+          <a href="/recipes" class="mt-8 inline-flex items-center gap-2 text-red-600 font-black uppercase tracking-widest hover:gap-4 transition-all">
+            Browse all recipes
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+          </a>
+        </div>
+      )}
+    </div>
+  </main>
+</BaseLayout>

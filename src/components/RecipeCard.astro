@@ -1,0 +1,110 @@
+---
+interface Props {
+  title: string;
+  cuisine: string;
+  course: string;
+  difficulty: string;
+  prepTime: string;
+  cookTime: string;
+  totalTime: string;
+  servings: string;
+  mainIngredients: string;
+  dietary: string;
+  nutrition: string;
+}
+
+const { 
+  title, cuisine, course, difficulty, prepTime, cookTime, 
+  totalTime, servings, mainIngredients, dietary, nutrition 
+} = Astro.props;
+---
+
+<div id="recipe-card" class="recipe-card my-12 overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-xl shadow-orange-100/50 ring-1 ring-black/5" data-ps="src/components/RecipeCard.astro:xg2gjs">
+  <!-- Header -->
+  <div class="bg-gradient-to-r from-red-600 to-orange-500 px-8 py-6 text-white" data-ps="src/components/RecipeCard.astro:xg2gjt">
+    <div class="flex items-center justify-between" data-ps="src/components/RecipeCard.astro:xg2gju">
+      <h2 class="font-serif text-3xl font-bold tracking-tight text-white m-0" data-ps="src/components/RecipeCard.astro:ax8e6q">{title}</h2>
+      <span class="rounded-full bg-white/20 px-3 py-1 text-sm font-medium text-white backdrop-blur-sm" data-ps="src/components/RecipeCard.astro:wah5jk">
+        {course}
+      </span>
+    </div>
+    <div class="mt-4 flex flex-wrap gap-4 text-sm font-medium text-white/90" data-ps="src/components/RecipeCard.astro:xg2gjv">
+      <div class="flex items-center gap-1.5" data-ps="src/components/RecipeCard.astro:xg2gjw">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        {cuisine}
+      </div>
+      <div class="flex items-center gap-1.5" data-ps="src/components/RecipeCard.astro:xg2gjx">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chef-hat"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" y1="17" x2="18" y2="17"/></svg>
+        {difficulty}
+      </div>
+      <div class="flex items-center gap-1.5" data-ps="src/components/RecipeCard.astro:xg2gjy">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        {totalTime}
+      </div>
+      <div class="flex items-center gap-1.5" data-ps="src/components/RecipeCard.astro:xg2gjz">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        {servings}
+      </div>
+    </div>
+  </div>
+
+  <div class="p-8" data-ps="src/components/RecipeCard.astro:xg2gk0">
+    <!-- Meta Grid -->
+    <div class="mb-8 grid grid-cols-1 gap-6 rounded-xl bg-orange-50 p-6 md:grid-cols-2" data-ps="src/components/RecipeCard.astro:xg2gk1">
+      <div class="space-y-1" data-ps="src/components/RecipeCard.astro:smkkjd">
+        <span class="text-xs font-bold uppercase tracking-wider text-orange-700" data-ps="src/components/RecipeCard.astro:wah5jj">Main Ingredients</span>
+        <p class="font-medium text-gray-900" data-ps="src/components/RecipeCard.astro:phh4rz">{mainIngredients}</p>
+      </div>
+      <div class="space-y-1" data-ps="src/components/RecipeCard.astro:smkkjc">
+        <span class="text-xs font-bold uppercase tracking-wider text-orange-700" data-ps="src/components/RecipeCard.astro:wah5ji">Dietary</span>
+        <p class="font-medium text-gray-900" data-ps="src/components/RecipeCard.astro:phh4s0">{dietary}</p>
+      </div>
+      <div class="flex gap-8 md:col-span-2" data-ps="src/components/RecipeCard.astro:smkkjb">
+        <div data-ps="src/components/RecipeCard.astro:smkkja">
+          <span class="text-xs font-bold uppercase tracking-wider text-gray-500" data-ps="src/components/RecipeCard.astro:wah5jh">Prep</span>
+          <p class="font-bold text-gray-900" data-ps="src/components/RecipeCard.astro:phh4s1">{prepTime}</p>
+        </div>
+        <div data-ps="src/components/RecipeCard.astro:smkkj9">
+          <span class="text-xs font-bold uppercase tracking-wider text-gray-500" data-ps="src/components/RecipeCard.astro:wah5jg">Cook</span>
+          <p class="font-bold text-gray-900" data-ps="src/components/RecipeCard.astro:phh4sn">{cookTime}</p>
+        </div>
+        <div data-ps="src/components/RecipeCard.astro:smkkj8">
+          <span class="text-xs font-bold uppercase tracking-wider text-gray-500" data-ps="src/components/RecipeCard.astro:wah5jf">Total</span>
+          <p class="font-bold text-gray-900" data-ps="src/components/RecipeCard.astro:phh4so">{totalTime}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Split -->
+    <div class="grid gap-8 lg:grid-cols-2" data-ps="src/components/RecipeCard.astro:smkkj7">
+      <!-- Ingredients -->
+      <div data-ps="src/components/RecipeCard.astro:smkkj6">
+        <div class="mb-4 flex items-center gap-2 border-b-2 border-orange-100 pb-2" data-ps="src/components/RecipeCard.astro:smkkj5">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-basket text-red-600"><path d="m5 11 4-7"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8c.9 0 1.8-.7 2-1.6l1.7-7.4"/><path d="m9 11 1 9"/><path d="m4.5 11 1 9"/><path d="m15 11-1 9"/></svg>
+          <h3 class="font-serif text-xl font-bold text-gray-900 m-0" data-ps="src/components/RecipeCard.astro:plnbeb">Ingredients</h3>
+        </div>
+        <div class="prose prose-orange prose-sm" data-ps="src/components/RecipeCard.astro:smkkj4">
+          <slot name="ingredients" />
+        </div>
+      </div>
+
+      <!-- Instructions -->
+      <div data-ps="src/components/RecipeCard.astro:smkkii">
+        <div class="mb-4 flex items-center gap-2 border-b-2 border-orange-100 pb-2" data-ps="src/components/RecipeCard.astro:smkkih">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chef-hat text-red-600"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" y1="17" x2="18" y2="17"/></svg>
+          <h3 class="font-serif text-xl font-bold text-gray-900 m-0" data-ps="src/components/RecipeCard.astro:plnbec">Instructions</h3>
+        </div>
+        <div class="prose prose-orange prose-sm" data-ps="src/components/RecipeCard.astro:smkkig">
+          <slot name="instructions" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-8 rounded-lg bg-gray-50 p-4 text-center" data-ps="src/components/RecipeCard.astro:smkkif">
+      <p class="text-sm text-gray-600" data-ps="src/components/RecipeCard.astro:phh4sp">
+        <span class="font-bold text-gray-900" data-ps="src/components/RecipeCard.astro:wah5je">Nutrition per serving:</span> {nutrition}
+      </p>
+    </div>
+  </div>
+</div>

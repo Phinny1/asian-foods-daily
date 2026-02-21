@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config/site';
+
+const title = `Disclaimer | ${SITE.name}`;
+const description = "Disclaimer for Asian Foods Daily. Information regarding recipes, nutrition, and health.";
+---
+
+<BaseLayout title="Asianfoodsdaily  - Disclaimer" description="Asianfoodsdaily provides general educational content only. We aim for accuracy but make no guarantees about completeness, reliability, or suitability"
+  ogType="website"
+  noIndex="false">
+  <main class="py-24 bg-zinc-50" data-ps="src/pages/disclaimer.astro:9gaj8z">
+    <div class="container mx-auto px-4 max-w-4xl" data-ps="src/pages/disclaimer.astro:fvgi8d">
+      <div class="bg-white p-8 md:p-16 rounded-3xl shadow-sm border border-zinc-100" data-ps="src/pages/disclaimer.astro:fvgi8e">
+        <h1 class="text-4xl md:text-5xl font-black mb-8 text-zinc-900 tracking-tight" data-ps="src/pages/disclaimer.astro:s3fu6m">Disclaimer</h1>
+        
+        <div class="prose prose-zinc prose-lg max-w-none text-zinc-600 space-y-8" data-ps="src/pages/disclaimer.astro:fvgi8f">
+          <section data-ps="src/pages/disclaimer.astro:i1uyvc">
+            <h2 class="text-2xl font-bold text-zinc-900 mb-4" data-ps="src/pages/disclaimer.astro:x9p91m">General Information</h2>
+            <p data-ps="src/pages/disclaimer.astro:tvazqh">The information provided on Asianfoodsdaily is for general informational and educational purposes only. While we strive to provide accurate and up-to-date information, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, or suitability of the information, recipes, or graphics contained on this website.</p>
+          </section>
+
+          <section data-ps="src/pages/disclaimer.astro:i1uyvb">
+            <h2 class="text-2xl font-bold text-zinc-900 mb-4" data-ps="src/pages/disclaimer.astro:x9p91n">Nutritional Information</h2>
+            <p data-ps="src/pages/disclaimer.astro:tvazqi">
+              Nutritional information provided for recipes on this site is an estimate only. Factors such as specific brands used, natural variations in fresh ingredients, and portion sizes will affect the nutritional values. For precise nutritional information, you should use a nutrition calculator with the exact ingredients you are using.
+            </p>
+          </section>
+
+          <section data-ps="src/pages/disclaimer.astro:i1uyva">
+            <h2 class="text-2xl font-bold text-zinc-900 mb-4" data-ps="src/pages/disclaimer.astro:x9p91o">Allergies and Dietary Restrictions</h2>
+            <p data-ps="src/pages/disclaimer.astro:tvazqj">
+              It is your responsibility to ensure that any recipe or ingredient you choose to use is safe for your own consumption, especially if you have food allergies or dietary restrictions. Always check ingredient labels carefully and consult with a medical professional if you have concerns about specific ingredients.
+            </p>
+          </section>
+
+          <section data-ps="src/pages/disclaimer.astro:i1uyv9">
+            <h2 class="text-2xl font-bold text-zinc-900 mb-4" data-ps="src/pages/disclaimer.astro:x9p91p">Cooking Safety</h2>
+            <p data-ps="src/pages/disclaimer.astro:tvazqk">Cooking involves inherent risks, including heat, sharp tools, and food safety handling. Please practice safe cooking techniques at all times. Asianfoodsdaily is not responsible for any injury or damage that may occur while following recipes or techniques shared on this site.</p>
+          </section>
+
+          <section data-ps="src/pages/disclaimer.astro:i1uyv8">
+            <h2 class="text-2xl font-bold text-zinc-900 mb-4" data-ps="src/pages/disclaimer.astro:x9p91q">External Links</h2>
+            <p data-ps="src/pages/disclaimer.astro:tvazql">
+              Through this website, you may be able to link to other websites which are not under the control of Asian Foods Daily. We have no control over the nature, content, and availability of those sites. The inclusion of any links does not necessarily imply a recommendation or endorse the views expressed within them.
+            </p>
+          </section>
+
+          <section data-ps="src/pages/disclaimer.astro:affiliate-content">
+            <h2 class="text-2xl font-bold text-zinc-900 mb-4" data-ps="src/pages/disclaimer.astro:skhhb9">Affiliate & Sponsored Content</h2>
+            <p data-ps="src/pages/disclaimer.astro:jal559">
+              This site may earn commissions through affiliate links (e.g., Amazon Associates) or sponsored partnerships. These links come at no extra cost to you and support our work. Opinions in sponsored posts remain our own.
+            </p>
+          </section>
+
+          <section data-ps="src/pages/disclaimer.astro:liability-content">
+            <h2 class="text-2xl font-bold text-zinc-900 mb-4" data-ps="src/pages/disclaimer.astro:skhhba">Limitation of Liability</h2>
+            <p data-ps="src/pages/disclaimer.astro:jal55a">
+              By using this site, you agree that Asianfoodsdaily, and its owner is not liable for any damages arising from the use of recipes, advice, or external links.
+            </p>
+          </section>
+
+          <p class="text-sm pt-8 border-t border-zinc-100 italic" data-ps="src/pages/disclaimer.astro:tvazr7">
+            Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+</BaseLayout>

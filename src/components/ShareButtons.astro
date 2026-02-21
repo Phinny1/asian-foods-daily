@@ -1,0 +1,68 @@
+---
+interface Props {
+  title: string;
+  url: string;
+}
+
+const { title, url } = Astro.props;
+const encodedUrl = encodeURIComponent(url);
+const encodedTitle = encodeURIComponent(title);
+
+const shareLinks = [
+  {
+    name: 'Facebook',
+    icon: 'M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z',
+    url: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+    color: 'hover:text-[#1877F2]'
+  },
+  {
+    name: 'X',
+    icon: 'M4 4l11.733 16h4.267l-11.733-16z M4 20l6.768-6.768M20 4l-6.768 6.768',
+    url: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
+    color: 'hover:text-black'
+  },
+  {
+    name: 'Reddit',
+    icon: 'M12 2c5.522 0 10 4.477 10 10s-4.478 10-10 10-10-4.477-10-10 4.478-10 10-10zm0 18c4.411 0 8-3.589 8-8s-3.589-8-8-8-8 3.589-8 8 3.589 8 8 8z M16.634 11.238c-.283 0-.543.109-.74.288-.636-.454-1.503-.746-2.47-.788l.421-1.979 1.378.324c.03.359.331.64.697.64.385 0 .698-.312.698-.698s-.313-.698-.698-.698c-.288 0-.535.176-.641.424l-1.536-.361a.174.174 0 0 0-.211.131l-.472 2.217c-.982.023-1.867.318-2.516.78-.198-.182-.46-.294-.748-.294-.616 0-1.116.5-1.116 1.116 0 .399.21.748.524.945-.015.111-.023.224-.023.339 0 1.766 2.046 3.204 4.561 3.204 2.515 0 4.561-1.438 4.561-3.204 0-.109-.007-.216-.02-.321.332-.193.558-.553.558-.963 0-.616-.501-1.116-1.117-1.116z',
+    url: `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedTitle}`,
+    color: 'hover:text-[#FF4500]'
+  },
+  {
+    name: 'Pinterest',
+    icon: 'M8 12a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-9a5 5 0 1 0 0 10 5 5 0 0 0 0-10z M12 2C6.477 2 2 6.477 2 12c0 4.237 2.636 7.855 6.356 9.312-.088-.791-.167-2.005.035-2.868.182-.78 1.172-4.97 1.172-4.97s-.299-.598-.299-1.483c0-1.39.806-2.428 1.81-2.428.854 0 1.265.64 1.265 1.41 0 .858-.546 2.14-.828 3.328-.236.995.5 1.807 1.48 1.807 1.778 0 3.144-1.874 3.144-4.58 0-2.393-1.72-4.068-4.177-4.068-2.847 0-4.518 2.135-4.518 4.341 0 .859.331 1.78.744 2.28a.3.3 0 0 1 .069.288c-.076.318-.245.998-.278 1.137-.044.183-.146.222-.338.133-1.26-.587-2.048-2.43-2.048-3.91 0-3.184 2.313-6.108 6.67-6.108 3.502 0 6.224 2.495 6.224 5.832 0 3.479-2.194 6.28-5.238 6.28-1.023 0-1.985-.532-2.314-1.157l-.63 2.398c-.227.873-.839 1.968-1.25 2.634C10.062 21.835 11.011 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z',
+    url: `https://pinterest.com/pin/create/button/?url=${encodedUrl}&description=${encodedTitle}`,
+    color: 'hover:text-[#BD081C]'
+  },
+  {
+    name: 'Tumblr',
+    icon: 'M14.563 24c-5.093 0-7.031-3.756-7.031-6.411V9.747H5.139V6.602c2.13-.758 3.534-2.312 4.474-4.52h3.251v4.503h4.634v3.161h-4.634v7.354c0 .824.343 2.124 2.238 2.124.835 0 1.574-.188 2.342-.512L18.454 22c-1.233.953-2.628 2-3.891 2z',
+    url: `https://www.tumblr.com/widgets/share/tool?canonicalUrl=${encodedUrl}&title=${encodedTitle}`,
+    color: 'hover:text-[#36465D]'
+  },
+  {
+    name: 'Email',
+    icon: 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z M22 6l-10 7L2 6',
+    url: `mailto:?subject=${encodedTitle}&body=Check out this recipe: ${encodedUrl}`,
+    color: 'hover:text-gray-600'
+  }
+];
+---
+
+<div class="flex items-center gap-5" data-ps="src/components/ShareButtons.astro:share-container">
+  <div class="flex items-center gap-5" data-ps="src/components/ShareButtons.astro:1lrf4k">
+    {shareLinks.map((link) => (
+      <a
+        href={link.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Share on ${link.name}`}
+        class={`text-gray-600 transition-all duration-300 ${link.color} hover:scale-110`}
+        data-ps={`src/components/ShareButtons.astro:link-${link.name.toLowerCase()}`}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+          <path d={link.icon} />
+        </svg>
+      </a>
+    ))}
+  </div>
+</div>

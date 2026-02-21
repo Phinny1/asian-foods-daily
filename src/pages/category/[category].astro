@@ -1,0 +1,131 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const categories = [
+    { slug: 'main-course', name: 'Main Course' },
+    { slug: 'noodles', name: 'Noodles' },
+    { slug: 'soup', name: 'Soup' },
+    { slug: 'vegetables', name: 'Vegetables' },
+    { slug: 'chicken', name: 'Chicken' },
+    { slug: 'rice', name: 'Rice' }
+  ];
+
+  return categories.map(cat => ({
+    params: { category: cat.slug },
+    props: { name: cat.name, slug: cat.slug }
+  }));
+}
+
+const { category } = Astro.params;
+const { name, slug } = Astro.props;
+
+// Helper to normalize strings
+const normalize = (str) => {
+  if (!str) return '';
+  let s = str.toLowerCase().trim();
+  if (s === 'rice') return s;
+  return s.endsWith('s') ? s.slice(0, -1) : s;
+};
+
+// Filter function for recipes
+const filterFn = (entry) => {
+  const data = entry?.data;
+  if (!data?.title) return false;
+  if (data.draft === true) return false;
+
+  const filter = name.toLowerCase().trim();
+  const cat = (data.category || '').toLowerCase().trim();
+  const title = (data.title || '').toLowerCase();
+
+  const filterNorm = normalize(filter);
+  const catNorm = normalize(cat);
+
+  const categoryMatch = cat === filter ||
+         cat.includes(filter) ||
+         filter.includes(cat) ||
+         catNorm === filterNorm ||
+         catNorm.includes(filterNorm) ||
+         filterNorm.includes(catNorm);
+
+  const keywordMatch = filter === 'rice' && (title.includes('rice') || title.includes('nasi') || title.includes('arroz'));
+
+  return categoryMatch || keywordMatch;
+};
+
+// Fetch only from recipes collection for category pages
+const recipes = await getCollection('recipes', filterFn);
+
+const sortedRecipes = recipes.sort(
+  (a, b) => (b.data?.pubDate?.valueOf() || 0) - (a.data?.pubDate?.valueOf() || 0)
+);
+
+const displayTitle = `${name} Recipes`;
+---
+
+<BaseLayout title={`${displayTitle} | Asian Foods Daily`}>
+  <main class="bg-zinc-50 min-h-screen" data-ps="src/pages/category/[category].astro:55bs4f">
+    <!-- Hero Section -->
+    <section class="bg-zinc-900 py-24 px-4 overflow-hidden relative" data-ps="src/pages/category/[category].astro:mohpyl">
+      <div class="absolute inset-0 opacity-20" data-ps="src/pages/category/[category].astro:5pby5h">
+        <img crossorigin="anonymous" src="https://images.unsplash.com/photo-1664337873053-840ea51d271d?auto=format&w=1920&q=80" 
+          alt={`${name} background`} 
+          class="w-full h-full object-cover" data-ps="src/pages/category/[category].astro:w8t6do"
+        />
+      </div>
+      <div class="container mx-auto relative z-10 text-center" data-ps="src/pages/category/[category].astro:5pby5g">
+        <h1 class="text-5xl md:text-7xl font-black text-white mb-6 tracking-tighter" data-ps="src/pages/category/[category].astro:yszeji">
+          {displayTitle.split(' ').slice(0, -1).join(' ')} <span class="text-red-400" data-ps="src/pages/category/[category].astro:mnc02s">{displayTitle.split(' ').pop()}</span>
+        </h1>
+        <p class="text-zinc-300 text-xl max-w-2xl mx-auto font-medium" data-ps="src/pages/category/[category].astro:h1p3vl">
+          Explore our collection of authentic {name.toLowerCase()} dishes, from traditional favorites to modern twists.
+        </p>
+      </div>
+    </section>
+
+    <!-- Recipe Grid -->
+    <section class="py-20 px-4" data-ps="src/pages/category/[category].astro:mohpym">
+      <div class="container mx-auto" data-ps="src/pages/category/[category].astro:5pby5f">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" data-ps="src/pages/category/[category].astro:5pby5e">
+          {sortedRecipes.map((recipe) => (
+            <a href={`/recipes/${recipe.slug}`} class="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col" data-ps="src/pages/category/[category].astro:o5n0kp">
+              <div class="aspect-[4/3] overflow-hidden relative" data-ps="src/pages/category/[category].astro:5pby5d">
+                <img 
+                  src={recipe.data.image || "https://images.unsplash.com/photo-1651836170595-4b0e7cba3952?auto=format&w=800&q=80"} 
+                  alt={recipe.data.title}
+                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-ps="src/pages/category/[category].astro:w8t6dn"
+                />
+                <div class="absolute top-4 left-4 bg-red-600 text-white text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full" data-ps="src/pages/category/[category].astro:5pby5c">
+                  {recipe.data.category || 'Recipe'}
+                </div>
+              </div>
+              <div class="p-8 flex-grow flex flex-col" data-ps="src/pages/category/[category].astro:5pby5b">
+                <div class="flex items-center gap-2 text-zinc-600 text-xs font-bold uppercase tracking-widest mb-4" data-ps="src/pages/category/[category].astro:5pby5a">
+                  <span data-ps="src/pages/category/[category].astro:mnc02r">{recipe.data.pubDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                </div>
+                <h2 class="text-2xl font-black text-zinc-900 group-hover:text-red-600 transition-colors mb-4 line-clamp-2" data-ps="src/pages/category/[category].astro:k4khbx">{recipe.data.title}</h2>
+                <p class="text-zinc-600 font-medium mb-8 line-clamp-3" data-ps="src/pages/category/[category].astro:h1p3uz">{recipe.data.description}</p>
+                <div class="mt-auto flex items-center justify-between" data-ps="src/pages/category/[category].astro:5pby59">
+                  <span class="text-zinc-900 font-black text-sm uppercase tracking-tighter group-hover:translate-x-2 transition-transform duration-300" data-ps="src/pages/category/[category].astro:mnc02q">View Recipe →</span>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        {sortedRecipes.length === 0 && (
+          <div class="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-zinc-200" data-ps="src/pages/category/[category].astro:5pby58">
+            <h3 class="text-2xl font-bold text-zinc-600" data-ps="src/pages/category/[category].astro:5g5k4c">Coming soon! We're preparing our best {name.toLowerCase()} recipes for you.</h3>
+          </div>
+        )}
+        
+        <div class="mt-16 text-center" data-ps="src/pages/category/[category].astro:yr2ap8">
+          <a href="/recipes" class="inline-flex items-center gap-2 text-red-600 font-bold hover:text-red-700 transition-colors" data-ps="src/pages/category/[category].astro:o5n0ko">
+            ← Back to all recipes
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

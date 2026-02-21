@@ -1,0 +1,117 @@
+---
+export const prerender = false;
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const runtime = Astro.locals.runtime;
+if (!runtime?.env?.DB) {
+  return new Response('Service unavailable', { status: 503 });
+}
+
+const db = runtime.env.DB;
+const emailService = runtime.env.EMAIL_SERVICE;
+const siteId = runtime.env.SITE_ID;
+
+let error = '';
+let success = false;
+
+if (Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+  const email = formData.get('email')?.toString();
+
+  if (!email || !email.includes('@')) {
+    error = 'Please enter a valid email address.';
+  } else {
+    try {
+      // 1. Save to Database
+      await db
+        .prepare('INSERT INTO newsletter_subscribers (email) VALUES (?)')
+        .bind(email)
+        .run();
+      
+      // 2. Send Email Notification
+      if (emailService && siteId) {
+        try {
+          await emailService.fetch('https://internal/send', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Origin': Astro.url.origin,
+            },
+            body: JSON.stringify({
+              projectId: siteId,
+              email: 'hello@asianfoodsdaily.com', // Recipient
+              name: 'Newsletter Bot',
+              subject: 'New Newsletter Subscriber!',
+              subscriber_email: email,
+              source: 'Join Our Cooking Community'
+            }),
+          });
+        } catch (e) {
+          console.error('Email notification failed:', e);
+          // Non-fatal, subscriber is still saved in DB
+        }
+      }
+
+      success = true;
+      // Redirect back to homepage with success parameter
+      return Astro.redirect('/?subscribed=1');
+    } catch (e: any) {
+      if (e.message?.includes('UNIQUE')) {
+        // Already subscribed, just show success
+        return Astro.redirect('/?subscribed=1');
+      }
+      console.error('Newsletter error:', e);
+      error = 'Something went wrong. Please try again.';
+    }
+  }
+}
+---
+
+<BaseLayout title="Newsletter Subscription" description="Get the best of Asian cuisine weekly! Subscribe to Asianfoodsdaily's newsletter for authentic recipes, kitchen hacks, and exclusive food content now."
+  ogType="website"
+  noIndex={false}>
+  <div class="min-h-[60vh] flex items-center justify-center bg-zinc-50 py-12 px-4" data-ps="src/pages/subscribe.astro:mxp3dh">
+    <div class="max-w-md w-full bg-white p-8 rounded-2xl shadow-xl border border-zinc-100" data-ps="src/pages/subscribe.astro:mxp3dg">
+      <h1 class="text-3xl font-bold mb-4 text-zinc-900" data-ps="src/pages/subscribe.astro:byhvaq">Newsletter</h1>
+      
+      {error && (
+        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6" data-ps="src/pages/subscribe.astro:mxp3df">
+          {error}
+        </div>
+      )}
+
+      {success ? (
+        <div class="text-center" data-ps="src/pages/subscribe.astro:mxp3de">
+          <div class="w-16 h-16 bg-green-100 text-green-700 rounded-full flex items-center justify-center mx-auto mb-4" data-ps="src/pages/subscribe.astro:mxp3dd">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold mb-2" data-ps="src/pages/subscribe.astro:bhg85t">You're subscribed!</h2>
+          <p class="text-zinc-600 mb-6" data-ps="src/pages/subscribe.astro:b1q7yu">Thank you for joining our community.</p>
+          <a href="/" class="inline-block px-8 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-all" data-ps="src/pages/subscribe.astro:atgzy1">
+            Back to Home
+          </a>
+        </div>
+      ) : (
+        <form method="POST" class="space-y-4">
+          <div data-ps="src/pages/subscribe.astro:mxp3dc">
+            <label for="email" class="block text-sm font-medium text-zinc-700 mb-1">Email Address</label>
+            <input 
+              type="email" 
+              name="email" 
+              id="email"
+              required 
+              placeholder="your@email.com" 
+              class="w-full px-4 py-3 rounded-xl border border-zinc-200 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all"
+            />
+          </div>
+          <button type="submit" class="w-full py-4 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-all shadow-lg" data-ps="src/pages/subscribe.astro:xsx4pz">
+            Subscribe Now
+          </button>
+        </form>
+      )}
+    </div>
+  </div>
+</BaseLayout>

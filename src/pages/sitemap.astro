@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const recipes = await getCollection('recipes', ({ data }) => {
+  return data.draft !== true;
+});
+
+const blogPosts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true;
+});
+
+// Extract unique categories from both recipes and blog posts
+const categories = [...new Set([
+  ...recipes.map(r => r.data.category).filter(Boolean),
+  ...blogPosts.map(p => p.data.category).filter(Boolean)
+])].sort();
+
+const siteUrl = "https://www.asianfoodsdaily.com";
+
+const sitemapSections = [
+  {
+    title: "Main Pages",
+    links: [
+      { name: "Homepage", url: "/" },
+      { name: "All Recipes", url: "/recipes" },
+      { name: "Blog", url: "/blog" },
+    ]
+  },
+  {
+    title: "Categories",
+    links: categories.map(cat => ({
+      name: cat,
+      url: `/category/${cat?.toLowerCase().replace(/\s+/g, '-')}`
+    }))
+  },
+  {
+    title: "Recipes",
+    links: recipes.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()).map(r => ({
+      name: r.data.title,
+      url: `/recipes/${r.slug}`
+    }))
+  },
+  {
+    title: "Blog Articles",
+    links: blogPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()).map(p => ({
+      name: p.data.title,
+      url: `/blog/${p.slug}`
+    }))
+  }
+];
+
+const title = "Sitemap | Asian Foods Daily";
+const description = "Complete site map for Asian Foods Daily. Find all our authentic Asian recipes, cooking guides, and blog posts in one place.";
+---
+
+<BaseLayout title="Sitemap | Asianfoodsdaily" description="Browse the full Asianfoodsdaily sitemap with all recipes, categories, guides, and blogs. Easily navigate authentic Asian dishes, tips, and cooking resources."
+  ogType="website"
+  noIndex={false}>
+  <main class="max-w-4xl mx-auto px-4 py-16" data-ps="src/pages/sitemap.astro:yxr7g6">
+    <header class="mb-12 border-b border-gray-100 pb-8" data-ps="src/pages/sitemap.astro:vx06ff">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4" data-ps="src/pages/sitemap.astro:8zylft">Sitemap</h1>
+      <p class="text-lg text-gray-600" data-ps="src/pages/sitemap.astro:juethd">Browse all content on Asian Foods Daily.</p>
+    </header>
+
+    <div class="grid gap-12 md:grid-cols-2" data-ps="src/pages/sitemap.astro:plp457">
+      {sitemapSections.map(section => (
+        <section data-ps="src/pages/sitemap.astro:gsekmc">
+          <h2 class="text-xl font-bold text-red-600 mb-6 flex items-center gap-2" data-ps="src/pages/sitemap.astro:8iwyaw">
+            <span class="w-2 h-2 bg-red-600 rounded-full" data-ps="src/pages/sitemap.astro:ky81ye"></span>
+            {section.title}
+          </h2>
+          <ul class="space-y-3">
+            {section.links.map(link => (
+              <li data-ps="src/pages/sitemap.astro:j33ry5">
+                <a 
+                  href={link.url} 
+                  class="text-gray-700 hover:text-red-600 transition-colors duration-200 flex items-start gap-2 group"
+                 data-ps="src/pages/sitemap.astro:gzb710">
+                  <span class="text-gray-300 group-hover:text-red-300" data-ps="src/pages/sitemap.astro:ky81yd">→</span>
+                  <span data-ps="src/pages/sitemap.astro:ky81yc">{link.name}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </main>
+</BaseLayout>

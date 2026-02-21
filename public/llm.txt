@@ -1,0 +1,18 @@
+# Asian Foods Daily
+
+Discover authentic Asian food recipes, step-by-step cooking guides, and delicious ideas for appetizers, noodles, soups, desserts, and more.
+
+URL: https://www.asianfoodsdaily.com
+
+## Main Sections
+- Recipes: Authentic Asian dishes from across the continent.
+- Blog: Cooking tips, food culture, and underrated ingredients.
+- Categories: Appetizers, Noodles, Soups, Desserts, and more.
+
+## Core Content
+Asian Foods Daily provides high-quality, authentic recipes for popular dishes like Pad Kra Pao, Mapo Tofu, Filipino Adobo, and Yangzhou Fried Rice. Each recipe includes detailed instructions and cultural context.
+
+## Contact & Legal
+- Privacy Policy: https://www.asianfoodsdaily.com/privacy/
+- Terms of Service: https://www.asianfoodsdaily.com/terms/
+- Cookie Policy: https://www.asianfoodsdaily.com/cookies/

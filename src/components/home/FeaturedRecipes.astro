@@ -1,0 +1,104 @@
+---
+import { siteConfig } from '../../config/site';
+
+const recipes = [
+  {
+    title: "Sinigang na Baboy",
+    image: 'https://images.unsplash.com/photo-1625940947631-908aa92ef5e7?auto=format&w=1200&q=80',
+    description: 'A classic Filipino pork sour soup with tamarind broth, pork belly, and fresh vegetables. Pure comfort in a bowl.',
+    category: "Soup",
+    slug: "sinigang-na-baboy-recipe"
+  },
+  {
+    title: "Thai Cucumber & Shrimp Salad",
+    image: "https://cdn.pagesmith.app/97394d4a-9281-4e16-8125-5ce5d075881b/Thai-Cucumber-Shrimp-Salad-2-1536x857-1536.webp",
+    description: "A plate of Thai Cucumber & Shrimp Salad features sliced cucumbers, juicy shrimp, red onions, crushed peanuts, and fresh mint leaves.",
+    category: "Salad",
+    slug: "thai-cucumber-shrimp-salad"
+  },
+  {
+    title: "Yangzhou Fried Rice",
+    image: "https://cdn.pagesmith.app/97394d4a-9281-4e16-8125-5ce5d075881b/Yangzhou-Fried-Rice-1536x857-1536.webp",
+    description: "A white bowl filled with Yangzhou Fried Rice featuring shrimp, ham cubes, scrambled eggs, peas, diced carrots, and chopped green onions.",
+    category: "Rice",
+    slug: "authentic-yangzhou-fried-rice-recipe"
+  },
+  {
+    title: "Chinese Egg Stir Fry Noodles",
+    image: "https://cdn.pagesmith.app/97394d4a-9281-4e16-8125-5ce5d075881b/Chinese-Egg-Stir-Fry-Noodles-1-1024.webp",
+    description: "A bowl of Chinese Egg Stir Fry Noodles with scrambled eggs, baby bok choy, sliced carrots, onions, and chopped green onions.",
+    category: "Noodles",
+    slug: "chinese-egg-stir-fry-noodles"
+  },
+  {
+    title: "Ampalaya Con Carne",
+    image: "https://images.unsplash.com/photo-1688940738506-acfe9334bf5c?auto=format&w=1200&q=80",
+    description: "Tender beef stir-fry with bitter melon and black beans. A healthy Filipino classic with a savory twist.",
+    category: "Main Course",
+    slug: "ampalaya-con-carne-recipe"
+  },
+  {
+    title: "Filipino Macaroni Salad",
+    image: "https://spcdn.shortpixel.ai/spio/ret_img,q_cdnize,to_auto,s_webp:avif/asianfoodsdaily.com/wp-content/uploads/2025/12/Filipino-Macaroni-Salad-Recipe-P3-1024x559.png",
+    description: "A sweet and creamy Filipino pasta salad with pineapple, raisins, and cheese—a party favorite.",
+    category: "Salad",
+    slug: "filipino-macaroni-salad-recipe"
+  },
+  {
+    title: "Chinese Cabbage Stir-Fry",
+    image: "https://images.unsplash.com/photo-1601528013634-59ab3bc83d0b?auto=format&w=1200&q=80",
+    description: "Authentic hand-torn cabbage stir-fry with garlic and chilies. A quick, delicious 15-minute vegetable dish.",
+    category: "Vegetables",
+    slug: "easy-chinese-cabbage-stir-fry-recipe"
+  },
+  {
+    title: "Quick Gyudon",
+    image: "https://spcdn.shortpixel.ai/spio/ret_img,q_cdnize,to_auto,s_webp:avif/asianfoodsdaily.com/wp-content/uploads/2025/09/Gyudon-300x300.jpg",
+    description: "A quick and easy Japanese beef bowl perfect for when you need comfort food fast. Ready in 12 minutes!",
+    category: "Japanese",
+    slug: "my-quick-gyudon-recipe-for-when-youre-so-over-today"
+  },
+  {
+    title: "Traditional Nasi Lemak",
+    image: "https://spcdn.shortpixel.ai/spio/ret_img,q_cdnize,to_auto,s_webp:avif/asianfoodsdaily.com/wp-content/uploads/2025/09/Traditional-Nasi-Lemak-with-Sambal-4-1024x559.png",
+    description: "Master authentic Malaysian nasi lemak with fragrant coconut rice, spicy sambal, and traditional sides like ikan bilis.",
+    category: "Malaysian",
+    slug: "how-to-make-traditional-nasi-lemak-with-sambal"
+  },
+  {
+    title: "Filipino Lechon",
+    image: "https://spcdn.shortpixel.ai/spio/ret_img,q_cdnize,to_auto,s_webp:avif/asianfoodsdaily.com/wp-content/uploads/2025/08/Filipino-Lechon-4-1024x572.png",
+    description: "Make perfectly crispy Filipino lechon (roasted pork) at home with this authentic recipe. Learn the secrets to achieving crispy skin and juicy meat.",
+    category: "Filipino",
+    slug: "how-to-make-filipino-lechon-roasted-pork"
+  },
+  {
+    title: "Filipino Dinuguan",
+    image: "https://spcdn.shortpixel.ai/spio/ret_img,q_cdnize,to_auto,s_webp:avif/asianfoodsdaily.com/wp-content/uploads/2025/09/Dinuguan-1024x572.png",
+    description: "Learn to make authentic Filipino dinuguan (chocolate meat stew) with this step-by-step guide. A rich and savory pork blood stew.",
+    category: "Filipino",
+    slug: "how-to-make-dinuguan-filipino-chocolate-meat-stew"
+  },
+  {
+    title: "Crispy Filipino Lumpia",
+    image: "https://spcdn.shortpixel.ai/spio/ret_img,q_cdnize,to_auto,s_webp:avif/asianfoodsdaily.com/wp-content/uploads/2025/09/Crispy-Filipino-Lumpia.png",
+    description: "Master the art of making perfectly golden and crispy Filipino Lumpia (spring rolls) with this step-by-step guide.",
+    category: "Filipino",
+    slug: "how-to-make-crispy-filipino-lumpia"
+  },
+  {
+    title: "Filipino Arroz Caldo",
+    image: "https://spcdn.shortpixel.ai/spio/ret_img,q_cdnize,to_auto,s_webp:avif/asianfoodsdaily.com/wp-content/uploads/2025/09/Arroz-Caldo-2-1-1024x572.png",
+    description: "This easy Arroz Caldo (Filipino Chicken & Rice Soup) recipe is perfect for anyone craving real comfort food.",
+    category: "Filipino",
+    slug: "how-to-make-arroz-caldo-filipino-chicken-rice-soup-recipe"
+  },
+  {
+    title: "Easy Bourbon Chicken",
+    image: "https://spcdn.shortpixel.ai/spio/ret_img,q_cdnize,to_auto,s_webp:avif/asianfoodsdaily.com/wp-content/uploads/2025/08/Bourbon-Chicken-Recipe-1024x572.png",
+    description: "This easy 30-minute bourbon chicken recipe gives you sticky, sweet, and savory chicken just like your favorite mall food court version.",
+    category: "Chinese",
+    slug: "easy-bourbon-chicken-recipe"
+  }
+];
+---

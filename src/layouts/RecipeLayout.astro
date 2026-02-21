@@ -1,0 +1,342 @@
+---
+import '../styles/global.css';
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
+import SEOHead from '../components/SEOHead.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import { SITE } from '../config/site';
+import Comments from '../components/Comments.astro';
+import ShareButtons from '../components/ShareButtons.astro';
+import { RecipeSlider } from '../components/islands/RecipeSlider';
+import { getCollection } from 'astro:content';
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+const { frontmatter: frontmatterProp, mdxFilePath = '', headings = [], ...props } = Astro.props as {
+  frontmatter?: any;
+  mdxFilePath?: string;
+  headings?: Heading[];
+  [key: string]: any;
+};
+const frontmatter = frontmatterProp || props;
+const postSlug = Astro.url.pathname;
+
+// TOC: enabled by default (matches schema default), can be disabled with toc: false
+const showToc = frontmatter.toc !== false && headings.length > 0;
+
+// Use ogImage if set, otherwise fall back to featured image
+const socialImage = frontmatter.ogImage || frontmatter.image;
+
+// Get schema data for recipe
+const schemaData = frontmatter.schemaData || {};
+
+// Extract recipe-specific data from schemaData
+const ingredients: string[] = schemaData.ingredients || [];
+const instructions: string[] = schemaData.instructions || [];
+const prepTime = schemaData.prepTime || '';
+const cookTime = schemaData.cookTime || '';
+const totalTime = schemaData.totalTime || '';
+const servings = schemaData.servings || '';
+const cuisine = schemaData.cuisine || frontmatter.category || '';
+const category = schemaData.category || 'Main course';
+const difficulty = schemaData.difficulty || 'Medium';
+const nutrition = schemaData.nutrition || '';
+const dietary = schemaData.dietary || '';
+
+// Check if we have recipe data to show the card
+const hasRecipeData = ingredients.length > 0 || instructions.length > 0;
+
+const { entry } = Astro.props;
+// Fetch other recipes for the slider
+const allRecipes = await getCollection('recipes');
+const otherRecipes = allRecipes
+  .filter(r => r.slug !== entry.slug)
+  .map(r => ({
+    title: r.data.title,
+    slug: r.slug,
+    image: r.data.image,
+    category: r.data.category
+  }))
+  .sort(() => Math.random() - 0.5); // Randomize for "Explore" feel
+
+// Build JSON-LD structured data for Recipe
+const jsonLd: Record<string, any> = {
+  '@context': 'https://schema.org',
+  '@type': 'Recipe',
+  name: frontmatter.title,
+  headline: frontmatter.title,
+  description: frontmatter.description,
+  datePublished: frontmatter.pubDate?.toISOString?.(),
+  author: {
+    '@type': 'Person',
+    name: frontmatter.author || SITE.name,
+  },
+  url: new URL(Astro.url.pathname, SITE.url).toString(),
+};
+
+// Add modified date if available
+if (frontmatter.updatedDate) {
+  jsonLd.dateModified = frontmatter.updatedDate.toISOString();
+}
+
+// Add image to schema if available
+if (socialImage) {
+  jsonLd.image = socialImage.startsWith('http')
+    ? socialImage
+    : new URL(socialImage, SITE.url).toString();
+}
+
+// Add recipe-specific fields
+if (prepTime) jsonLd.prepTime = `PT${prepTime.replace(/\s+/g, '').toUpperCase()}`;
+if (cookTime) jsonLd.cookTime = `PT${cookTime.replace(/\s+/g, '').toUpperCase()}`;
+if (totalTime) jsonLd.totalTime = `PT${totalTime.replace(/\s+/g, '').toUpperCase()}`;
+if (servings) jsonLd.recipeYield = servings;
+if (cuisine) jsonLd.recipeCuisine = cuisine;
+if (category) jsonLd.recipeCategory = category;
+if (ingredients.length > 0) jsonLd.recipeIngredient = ingredients;
+if (instructions.length > 0) {
+  jsonLd.recipeInstructions = instructions.map((step: string, i: number) => ({
+    '@type': 'HowToStep',
+    position: i + 1,
+    text: step,
+  }));
+}
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <SEOHead
+      title={`${frontmatter.title} – ${SITE.name}`}
+      description={frontmatter.description}
+      image={socialImage}
+      type="article"
+      publishedTime={frontmatter.pubDate?.toISOString?.()}
+      modifiedTime={frontmatter.updatedDate?.toISOString?.()}
+      canonicalUrl={frontmatter.canonicalUrl}
+      jsonLd={jsonLd}
+    />
+  </head>
+  <body class="min-h-screen bg-white" style="color: var(--text);" data-ps="src/layouts/RecipeLayout.astro:body">
+    <Navigation />
+
+    <main class="pt-24 pb-20" data-ps="src/layouts/RecipeLayout.astro:main">
+      <article
+        class="container mx-auto max-w-3xl px-6"
+        data-mdx-file={mdxFilePath}
+        data-mdx-type="recipe"
+        data-ps="src/layouts/RecipeLayout.astro:article">
+
+        <header class="mb-12" data-ps="src/layouts/RecipeLayout.astro:header">
+          <div class="flex items-center gap-3 mb-6 text-sm font-bold uppercase tracking-widest text-cyan-700" data-ps="src/layouts/RecipeLayout.astro:category-badge">
+            {frontmatter.category}
+          </div>
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-zinc-900 mb-8 leading-[1.1]" data-ps="src/layouts/RecipeLayout.astro:title">{frontmatter.title}</h1>
+
+          {frontmatter.image && (
+            <div class="mb-8 -mx-6 md:-mx-12 lg:-mx-24" data-ps="src/layouts/RecipeLayout.astro:featured-image">
+              <img
+                src={frontmatter.image}
+                alt={frontmatter.title}
+                class="w-full h-auto rounded-3xl shadow-xl object-cover max-h-[500px]"
+                loading="eager" data-ps="src/layouts/RecipeLayout.astro:r3f51z" />
+            </div>
+          )}
+
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 text-gray-500 text-sm border-y border-gray-100 py-6" data-ps="src/layouts/RecipeLayout.astro:meta">
+            <div class="flex items-center gap-3" data-ps="src/layouts/RecipeLayout.astro:author-block">
+              <span class="w-10 h-10 rounded-full bg-cyan-900 flex items-center justify-center text-cyan-50 font-bold text-sm shadow-sm" data-ps="src/layouts/RecipeLayout.astro:author-avatar">
+                A
+              </span>
+              <div class="flex flex-col" data-ps="src/layouts/RecipeLayout.astro:author-info">
+                <span class="text-black font-black text-base" data-ps="src/layouts/RecipeLayout.astro:author-name">{frontmatter.author || 'Asianfoodsdaily'}</span>
+                {frontmatter.pubDate && (
+                  <time datetime={frontmatter.pubDate.toISOString()} class="text-xs text-gray-600 uppercase font-bold tracking-tight">
+                    {frontmatter.pubDate.toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </time>
+                )}
+              </div>
+            </div>
+            <div class="flex items-center gap-4" data-ps="src/layouts/RecipeLayout.astro:share-wrapper">
+              <span class="text-[10px] font-black uppercase tracking-widest text-gray-600" data-ps="src/layouts/RecipeLayout.astro:share-label">Share:</span>
+              <div class="flex items-center gap-4" data-ps="src/layouts/RecipeLayout.astro:share-buttons">
+                <ShareButtons title={frontmatter.title} url={new URL(Astro.url.pathname, SITE.url).toString()} />
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Jump to Recipe Button (if recipe card exists) - at the top -->
+        {hasRecipeData && (
+          <div class="mb-8 flex justify-center" data-ps="src/layouts/RecipeLayout.astro:jump-btn">
+            <a href="#recipe-card" class="inline-flex items-center gap-2 rounded-full bg-red-700 px-6 py-3 text-sm font-bold uppercase tracking-wider text-white shadow-md transition-all hover:bg-orange-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2" data-ps="src/layouts/RecipeLayout.astro:jump-link">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+              Jump to Recipe
+            </a>
+          </div>
+        )}
+
+        <div class="recipe-content prose prose-slate prose-lg md:prose-xl max-w-none prose-headings:text-zinc-900 prose-headings:font-black prose-p:text-gray-700 prose-p:leading-relaxed prose-li:text-gray-700 prose-strong:text-gray-900 prose-img:rounded-3xl prose-img:shadow-xl prose-a:text-[#dc2626] prose-a:font-bold hover:prose-a:underline" data-ps="src/layouts/RecipeLayout.astro:content">
+          <slot />
+        </div>
+
+        <!-- Recipe Card (automatically generated from schemaData) - at the bottom -->
+        {hasRecipeData && (
+          <div id="recipe-card" class="recipe-card mt-12 mb-12 overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-xl shadow-orange-100/50 ring-1 ring-black/5" data-ps="src/layouts/RecipeLayout.astro:recipe-card">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-red-700 to-orange-700 px-8 py-6 text-white" data-ps="src/layouts/RecipeLayout.astro:card-header">
+              <div class="flex items-center justify-between" data-ps="src/layouts/RecipeLayout.astro:card-title-row">
+                <h2 class="font-serif text-3xl font-bold tracking-tight text-white m-0" data-ps="src/layouts/RecipeLayout.astro:card-title">{frontmatter.title}</h2>
+                <span class="rounded-full bg-white/20 px-3 py-1 text-sm font-medium text-white backdrop-blur-sm" data-ps="src/layouts/RecipeLayout.astro:card-category">
+                  {category}
+                </span>
+              </div>
+              <div class="mt-4 flex flex-wrap gap-4 text-sm font-medium text-white/90" data-ps="src/layouts/RecipeLayout.astro:card-meta">
+                {cuisine && (
+                  <div class="flex items-center gap-1.5" data-ps="src/layouts/RecipeLayout.astro:card-cuisine">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    {cuisine}
+                  </div>
+                )}
+                {difficulty && (
+                  <div class="flex items-center gap-1.5" data-ps="src/layouts/RecipeLayout.astro:card-difficulty">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chef-hat"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" y1="17" x2="18" y2="17"/></svg>
+                    {difficulty}
+                  </div>
+                )}
+                {totalTime && (
+                  <div class="flex items-center gap-1.5" data-ps="src/layouts/RecipeLayout.astro:card-time">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    {totalTime}
+                  </div>
+                )}
+                {servings && (
+                  <div class="flex items-center gap-1.5" data-ps="src/layouts/RecipeLayout.astro:card-servings">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    {servings}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div class="p-8" data-ps="src/layouts/RecipeLayout.astro:card-body">
+              <!-- Meta Grid -->
+              <div class="mb-8 grid grid-cols-1 gap-6 rounded-xl bg-orange-50 p-6 md:grid-cols-2" data-ps="src/layouts/RecipeLayout.astro:card-info-grid">
+                {dietary && (
+                  <div class="space-y-1" data-ps="src/layouts/RecipeLayout.astro:card-dietary">
+                    <span class="text-xs font-bold uppercase tracking-wider text-orange-700" data-ps="src/layouts/RecipeLayout.astro:2ocndi">Dietary</span>
+                    <p class="font-medium text-gray-900" data-ps="src/layouts/RecipeLayout.astro:eqrlu0">{dietary}</p>
+                  </div>
+                )}
+                <div class="flex gap-8 md:col-span-2" data-ps="src/layouts/RecipeLayout.astro:card-times">
+                  {prepTime && (
+                    <div data-ps="src/layouts/RecipeLayout.astro:card-prep">
+                      <span class="text-xs font-bold uppercase tracking-wider text-gray-500" data-ps="src/layouts/RecipeLayout.astro:2ocndh">Prep</span>
+                      <p class="font-bold text-gray-900" data-ps="src/layouts/RecipeLayout.astro:eqrltz">{prepTime}</p>
+                    </div>
+                  )}
+                  {cookTime && (
+                    <div data-ps="src/layouts/RecipeLayout.astro:card-cook">
+                      <span class="text-xs font-bold uppercase tracking-wider text-gray-500" data-ps="src/layouts/RecipeLayout.astro:2ocndg">Cook</span>
+                      <p class="font-bold text-gray-900" data-ps="src/layouts/RecipeLayout.astro:eqrlty">{cookTime}</p>
+                    </div>
+                  )}
+                  {totalTime && (
+                    <div data-ps="src/layouts/RecipeLayout.astro:card-total">
+                      <span class="text-xs font-bold uppercase tracking-wider text-gray-500" data-ps="src/layouts/RecipeLayout.astro:2ocndf">Total</span>
+                      <p class="font-bold text-gray-900" data-ps="src/layouts/RecipeLayout.astro:eqrltx">{totalTime}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <!-- Content Split -->
+              <div class="grid gap-8 lg:grid-cols-2" data-ps="src/layouts/RecipeLayout.astro:card-content">
+                <!-- Ingredients -->
+                {ingredients.length > 0 && (
+                  <div data-ps="src/layouts/RecipeLayout.astro:card-ingredients">
+                    <div class="mb-4 flex items-center gap-2 border-b-2 border-orange-100 pb-2" data-ps="src/layouts/RecipeLayout.astro:ingredients-header">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-basket text-red-600"><path d="m5 11 4-7"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8c.9 0 1.8-.7 2-1.6l1.7-7.4"/><path d="m9 11 1 9"/><path d="m4.5 11 1 9"/><path d="m15 11-1 9"/></svg>
+                      <h3 class="font-serif text-xl font-bold text-gray-900 m-0" data-ps="src/layouts/RecipeLayout.astro:ingredients-title">Ingredients</h3>
+                    </div>
+                    <ul class="space-y-2 text-gray-700" data-ps="src/layouts/RecipeLayout.astro:ingredients-list">
+                      {ingredients.map((ingredient: string) => (
+                        <li class="flex items-start gap-2" data-ps="src/layouts/RecipeLayout.astro:6hni88">
+                          <span class="text-orange-700 mt-1" data-ps="src/layouts/RecipeLayout.astro:2ocnde">•</span>
+                          <span data-ps="src/layouts/RecipeLayout.astro:p495qy">{ingredient}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <!-- Instructions -->
+                {instructions.length > 0 && (
+                  <div data-ps="src/layouts/RecipeLayout.astro:card-instructions">
+                    <div class="mb-4 flex items-center gap-2 border-b-2 border-orange-100 pb-2" data-ps="src/layouts/RecipeLayout.astro:instructions-header">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chef-hat text-red-600"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" y1="17" x2="18" y2="17"/></svg>
+                      <h3 class="font-serif text-xl font-bold text-gray-900 m-0" data-ps="src/layouts/RecipeLayout.astro:instructions-title">Instructions</h3>
+                    </div>
+                    <ol class="space-y-3 text-gray-700" data-ps="src/layouts/RecipeLayout.astro:instructions-list">
+                      {instructions.map((step: string, index: number) => (
+                        <li class="flex items-start gap-3" data-ps="src/layouts/RecipeLayout.astro:6hni89">
+                          <span class="flex-shrink-0 w-6 h-6 rounded-full bg-orange-700 text-white text-sm font-bold flex items-center justify-center" data-ps="src/layouts/RecipeLayout.astro:p495qz">{index + 1}</span>
+                          <span data-ps="src/layouts/RecipeLayout.astro:p495r0">{step}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+              </div>
+
+              <!-- Footer -->
+              {nutrition && (
+                <div class="mt-8 rounded-lg bg-gray-50 p-4 text-center" data-ps="src/layouts/RecipeLayout.astro:card-nutrition">
+                  <p class="text-sm text-gray-600" data-ps="src/layouts/RecipeLayout.astro:eqrltw">
+                    <span class="font-bold text-gray-900" data-ps="src/layouts/RecipeLayout.astro:p495r1">Nutrition per serving:</span> {nutrition}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {frontmatter.tags && frontmatter.tags.length > 0 && (
+          <footer class="mt-16 pt-10 border-t border-gray-100" data-ps="src/layouts/RecipeLayout.astro:tags">
+            <div class="flex flex-wrap gap-2" data-ps="src/layouts/RecipeLayout.astro:tags-list">
+              {frontmatter.tags.map((tag: string) => (
+                <span class="bg-gray-50 text-gray-600 px-4 py-1.5 rounded-full text-sm font-medium hover:bg-cyan-900 hover:text-cyan-50 transition-all cursor-default" data-ps="src/layouts/RecipeLayout.astro:tag">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          </footer>
+        )}
+
+        <!-- Print Button -->
+        <div class="mt-12 flex justify-end mb-12" data-ps="src/layouts/RecipeLayout.astro:print-wrapper">
+          <button onclick="window.print()" class="flex items-center gap-2 px-6 py-3 bg-gray-50 hover:bg-[#38758B] hover:text-white text-black transition-all rounded-xl text-xs font-black uppercase tracking-widest shadow-sm border border-gray-100" data-ps="src/layouts/RecipeLayout.astro:print-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print Recipe
+          </button>
+        </div>
+
+        <RecipeSlider recipes={otherRecipes} client:visible />
+        
+        <div class="mt-12" data-ps="src/layouts/RecipeLayout.astro:e2fy9x">
+          <Comments slug={postSlug} />
+        </div>
+      </article>
+    </main>
+
+    <Footer />
+  </body>
+</html>

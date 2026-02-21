@@ -1,0 +1,23 @@
+---
+import { getCollection } from 'astro:content';
+import RecipeLayout from '../../layouts/RecipeLayout.astro';
+
+export async function getStaticPaths() {
+  const filterFn = ({ data }: { data: any }) => data.draft !== true;
+
+  const recipesEntries = await getCollection('recipes', filterFn);
+
+  return recipesEntries.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry, collectionName: 'recipes' },
+  }));
+}
+
+const { entry, collectionName } = Astro.props;
+const { Content, headings } = await entry.render();
+const mdxFilePath = `src/content/${collectionName}/${entry.slug}.mdx`;
+---
+
+<RecipeLayout frontmatter={entry.data} mdxFilePath={mdxFilePath} headings={headings} entry={entry}>
+  <Content />
+</RecipeLayout>

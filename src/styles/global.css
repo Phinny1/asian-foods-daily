@@ -1,0 +1,165 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-primary-50: #f1f7f9;
+  --color-primary-100: #ddecf1;
+  --color-primary-200: #bfdbe6;
+  --color-primary-300: #93c1d4;
+  --color-primary-400: #609db9;
+  --color-primary-500: #38758b;
+  --color-primary-600: #34687d;
+  --color-primary-700: #2f5669;
+  --color-primary-800: #2c4958;
+  --color-primary-900: #283f4b;
+  --color-primary-950: #172932;
+
+  --color-accent-50: #f0f4f6;
+  --color-accent-100: #dae5eb;
+  --color-accent-200: #b9ced9;
+  --color-accent-300: #8ba9be;
+  --color-accent-400: #587e9d;
+  --color-accent-500: #3c5d7d;
+  --color-accent-600: #304a68;
+  --color-accent-700: #283d55;
+  --color-accent-800: #243447;
+  --color-accent-900: #222d3d;
+  --color-accent-950: #003042;
+}
+
+@layer base {
+  body {
+    @apply bg-[#FEF7FF] text-[#003042] font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+  }
+
+  /* Fix anchor scroll position for fixed navbar */
+  :target {
+    scroll-margin-top: 7rem;
+  }
+
+  /* Also apply to all elements with IDs that might be anchor targets */
+  [id] {
+    scroll-margin-top: 7rem;
+  }
+}
+
+/* Recipe Specific Styles to match screenshots */
+.recipe-content h2 {
+  @apply text-3xl font-bold mb-6 mt-12;
+}
+
+.recipe-content h3 {
+  @apply text-xl font-bold mb-4;
+}
+
+/* Ingredients Grid */
+.ingredients-container {
+  @apply bg-white rounded-2xl border border-gray-100 p-8 my-10 shadow-sm grid md:grid-cols-2 gap-x-12 gap-y-8;
+}
+
+.ingredients-section ul {
+  @apply space-y-4 list-none p-0 m-0;
+}
+
+.ingredients-section li {
+  @apply flex items-start gap-3 text-gray-700 leading-relaxed;
+}
+
+.ingredients-section li::before {
+  content: "•";
+  @apply text-indigo-500 font-bold text-xl leading-none mt-1;
+}
+
+.ingredients-section li strong {
+  @apply text-gray-900;
+}
+
+/* Instructions List */
+.instructions-list {
+  @apply space-y-8 list-none p-0 mt-8;
+}
+
+.instruction-step {
+  @apply flex gap-6 items-start;
+}
+
+.step-number {
+  @apply flex-shrink-0 w-10 h-10 rounded-full bg-slate-600 text-white flex items-center justify-center font-bold text-sm;
+}
+
+.step-content strong {
+  @apply block text-lg font-bold text-gray-900 mb-1;
+}
+
+.step-content p {
+  @apply text-gray-600 leading-relaxed m-0;
+}
+
+/* Image styling */
+.recipe-content img {
+  @apply rounded-2xl w-full h-auto my-10 object-cover shadow-sm;
+}
+
+/* Narrative section */
+.recipe-narrative {
+  @apply italic text-gray-600 leading-relaxed my-12 text-lg border-l-4 border-indigo-100 pl-6;
+}
+
+/* Tag styling */
+.recipe-tags {
+  @apply flex flex-wrap gap-4 mt-12 pt-8 border-t border-gray-100;
+}
+
+.recipe-tag {
+  @apply text-gray-900 font-medium hover:text-indigo-600 transition-colors;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Remark TOC Plugin Styles */
+.remark-toc {
+  @apply mb-8 rounded-xl border border-gray-100 bg-gray-50 p-6;
+}
+
+.remark-toc-title {
+  @apply mb-4 text-lg font-black text-zinc-900;
+}
+
+.remark-toc ul {
+  @apply space-y-2 text-sm list-none p-0 m-0;
+}
+
+.remark-toc li a {
+  @apply block py-1 font-semibold text-gray-800 transition-colors hover:text-[#dc2626] hover:underline;
+}
+
+.remark-toc li.remark-toc-sub {
+  @apply ml-4;
+}
+
+.remark-toc li.remark-toc-sub a {
+  @apply font-normal text-gray-600;
+}
+
+.glass {
+  @apply backdrop-blur-md bg-white/10 border border-white/20;
+}
+
+/* Update Disclaimer link color to Black in content */
+.recipe-content a[href*="disclaimer"],
+.prose a[href*="disclaimer"] {
+  @apply !text-black;
+}

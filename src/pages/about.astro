@@ -1,0 +1,28 @@
+---
+import { siteConfig as SITE } from '../config/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title={`About Us | ${SITE.title}`}
+  description="Learn more about Asian Foods Daily and our mission to share authentic Asian recipes."
+>
+  <section class="py-24 bg-white" data-ps="src/pages/about.astro:ks8f5v">
+    <div class="max-w-4xl mx-auto px-6 md:px-8 text-center" data-ps="src/pages/about.astro:txwtwt">
+      <span class="text-[var(--primary)] font-bold uppercase tracking-widest mb-6 block" data-ps="src/pages/about.astro:ftn437">Our Story</span>
+      <h1 class="text-5xl md:text-6xl font-bold text-[var(--accent)] mb-12" data-ps="src/pages/about.astro:ivxtwx">Passion for Asian Cuisine</h1>
+      <div class="prose prose-xl mx-auto text-zinc-600 leading-relaxed" data-ps="src/pages/about.astro:txwtws">
+        <p data-ps="src/pages/about.astro:iawiui">
+          Welcome to Asian Foods Daily, your ultimate destination for discovering the rich and diverse flavors of Asia. Our mission is simple: to make authentic Asian cooking accessible to everyone, everywhere.
+        </p>
+        <p data-ps="src/pages/about.astro:iawiuh">
+          Whether you're looking for a quick weeknight dinner, a traditional festive feast, or the secrets behind your favorite street foods, we've got you covered. Our recipes are carefully curated and tested to ensure you get the best results in your own kitchen.
+        </p>
+        <img src="https://cdn.pagesmith.app/97394d4a-9281-4e16-8125-5ce5d075881b/Thai-Cucumber-Shrimp-Salad-2-1536x857-1536.webp" alt="Cooking Together" class="rounded-3xl shadow-xl my-12" data-ps="src/pages/about.astro:2nv9i" />
+        <p data-ps="src/pages/about.astro:iawiug">
+          We believe that food is more than just sustenance; it's a bridge between cultures and a way to share love with family and friends. Join us on this culinary journey and transform your home cooking with the bold, vibrant, and healthy ingredients of Asian cuisine.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

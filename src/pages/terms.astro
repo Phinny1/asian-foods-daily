@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TermsContent from '../components/legal/TermsContent.astro';
+import { SITE } from '../config/site';
+---
+
+<BaseLayout
+  title="Asianfoodsdaily - Terms of Service"
+  description="By accessing or using this website (https://asianfoodsdaily.com/), you agree to comply with these Terms and Conditions. If you disagree, do not use the site"
+
+  ogType="website"
+  noIndex={false}>
+  <TermsContent />
+</BaseLayout>

@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CookiesContent from '../components/legal/CookiesContent.astro';
+
+const title = "Cookie Policy | Asian Foods Daily";
+const description = "Learn about how Asian Foods Daily uses cookies and similar technologies to provide, improve, and protect our services.";
+---
+
+<BaseLayout title="Cookie Policy | Asianfoodsdaily " description="Learn how Asianfoodsdaily uses cookies to enhance your browsing experience, improve performance, and deliver personalized content. Review our preferences."
+  ogType="website"
+  noIndex={false}>
+  <main class="bg-white" data-ps="src/pages/cookie-policy.astro:xvihs6">
+    <div class="container mx-auto" data-ps="src/pages/cookie-policy.astro:8ofr29">
+      <CookiesContent />
+    </div>
+  </main>
+</BaseLayout>

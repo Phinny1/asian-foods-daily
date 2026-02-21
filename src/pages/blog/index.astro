@@ -1,0 +1,84 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const filterFn = (entry: any) => {
+  const data = entry?.data;
+  if (!data?.title) return false;
+  return data.draft !== true;
+};
+
+// Fetch only from blog collection
+const blogPosts = await getCollection('blog', filterFn);
+
+const url = new URL(Astro.request.url);
+const query = url.searchParams.get('q')?.toLowerCase() || '';
+
+const filteredPosts = blogPosts.filter(post => {
+  if (!query) return true;
+  return post.data?.title?.toLowerCase().includes(query) ||
+         post.data?.description?.toLowerCase().includes(query) ||
+         post.data?.category?.toLowerCase().includes(query);
+});
+
+const sortedPosts = filteredPosts.sort(
+  (a, b) => (b.data?.pubDate?.valueOf() || 0) - (a.data?.pubDate?.valueOf() || 0)
+);
+---
+
+<BaseLayout title="Blogs | Asianfoodsdaily"
+  description="Explore food stories, cooking tips, kitchen guides, and cultural insights on Asianfoodsdaily. Fresh, inspiring blog posts for curious home cooks."
+  ogType="website"
+  noIndex={false}>
+  <main class="container mx-auto px-4 py-24" data-ps="src/pages/blog/index.astro:27rgmj">
+    <div class="max-w-2xl mx-auto text-center mb-16" data-ps="src/pages/blog/index.astro:z9lr8p">
+      <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4" data-ps="src/pages/blog/index.astro:iw50fd">Beyond the Wok</h1>
+      <p class="text-lg text-slate-600" data-ps="src/pages/blog/index.astro:60ko9y">Dive into articles that explore Asian culinary traditions, ingredient deep‑dives, cooking tips, and the heritage behind your favorite dishes.</p>
+    </div>
+
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-2 max-w-5xl mx-auto" data-ps="src/pages/blog/index.astro:z9lr8o">
+      {sortedPosts.map((post) => (
+        <article class="group bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300" data-ps="src/pages/blog/index.astro:joklk6">
+          <a href={`/blog/${post.slug}/`} class="block aspect-video overflow-hidden" data-ps="src/pages/blog/index.astro:d4ikzo">
+            {post.data.image && (
+              <img
+                src={post.data.image}
+                alt={post.data.title}
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                loading="lazy" data-ps="src/pages/blog/index.astro:5ecsla"
+              />
+            )}
+          </a>
+          <div class="p-8" data-ps="src/pages/blog/index.astro:z9lr8n">
+            <div class="flex items-center gap-2 mb-4" data-ps="src/pages/blog/index.astro:z9lr8m">
+              <span class="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full uppercase tracking-wider" data-ps="src/pages/blog/index.astro:pg71q5">
+                {post.data.category || 'Recipe'}
+              </span>
+              <time class="text-sm text-slate-600">
+                {post.data.pubDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+              </time>
+            </div>
+            <h2 class="text-2xl font-bold mb-3 group-hover:text-[#38758B] transition-colors" data-ps="src/pages/blog/index.astro:if3dag">
+              <a href={`/blog/${post.slug}/`} data-ps="src/pages/blog/index.astro:d4ikzn">
+                {post.data.title}
+              </a>
+            </h2>
+            <p class="text-slate-600 line-clamp-2 mb-6" data-ps="src/pages/blog/index.astro:60ko9x">{post.data.description}</p>
+            <a href={`/blog/${post.slug}/`} class="inline-flex items-center font-bold text-[#38758B] hover:gap-2 transition-all" data-ps="src/pages/blog/index.astro:d4ikzm">
+              View Recipe
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    {sortedPosts.length === 0 && (
+      <div class="text-center py-24" data-ps="src/pages/blog/index.astro:z9lr8l">
+        <p class="text-slate-500 text-lg" data-ps="src/pages/blog/index.astro:60ko9w">No recipes found. Check back soon!</p>
+      </div>
+    )}
+  </main>
+</BaseLayout>

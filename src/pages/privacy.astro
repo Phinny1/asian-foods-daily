@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PrivacyContent from '../components/legal/PrivacyContent.astro';
+import { SITE } from '../config/site';
+---
+
+<BaseLayout
+  title="Asianfoodsdaily - Privacy Policy"
+  description="Asianfoodsdaily respects your privacy. This policy explains how we collect, use, and protect your data when you visit our website."
+
+  ogType="website"
+  noIndex={false}>
+  <PrivacyContent />
+</BaseLayout>

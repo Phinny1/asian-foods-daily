@@ -1,0 +1,67 @@
+---
+import { siteConfig } from '../../config/site';
+---
+
+<section class="relative min-h-[90vh] flex items-center overflow-hidden" data-ps="src/components/home/Hero.astro:ah8lbj">
+  <div class="absolute inset-0 z-0" data-ps="src/components/home/Hero.astro:ecxgfc">
+    <img 
+      src="https://cdn.pagesmith.app/97394d4a-9281-4e16-8125-5ce5d075881b/Thai-Cucumber-Shrimp-Salad-2-1536x857-1536.webp" 
+      alt="Thai Cucumber and Shrimp Salad"
+      class="w-full h-full object-cover" data-ps="src/components/home/Hero.astro:gfvoyy"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" data-ps="src/components/home/Hero.astro:ecxgfb"></div>
+  </div>
+
+  <div class="container mx-auto px-4 relative z-10 py-24" data-ps="src/components/home/Hero.astro:ecxgfa">
+    <div class="max-w-3xl" data-ps="src/components/home/Hero.astro:ecxgf9">
+      <span class="inline-block px-4 py-2 bg-red-600 text-white text-sm font-bold uppercase tracking-widest rounded-lg mb-8 animate-fade-in" data-ps="src/components/home/Hero.astro:z1i1wl">
+        Authentic Flavors Daily
+      </span>
+      <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-tight tracking-tighter mb-8" data-ps="src/components/home/Hero.astro:307k1p">
+        The Art of <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400" data-ps="src/components/home/Hero.astro:z1i1wm">Asian</span> Cooking
+      </h1>
+      <p class="text-zinc-300 text-xl md:text-2xl leading-relaxed mb-12 max-w-2xl font-medium" data-ps="src/components/home/Hero.astro:6uykn2">
+        Discover authentic step-by-step guides for mouthwatering appetizers, noodles, soups, and desserts. Master the flavors of Asia in your kitchen.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-6" data-ps="src/components/home/Hero.astro:ecxgf8">
+        <a href="/recipes" class="px-10 py-5 bg-red-600 text-white font-extrabold rounded-2xl hover:bg-red-700 transition-all transform hover:-translate-y-1 shadow-2xl shadow-red-900/40 text-center" data-ps="src/components/home/Hero.astro:8zc21">
+          Explore Recipes
+        </a>
+        <a href="/about" class="px-10 py-5 bg-white/10 backdrop-blur-md text-white font-extrabold rounded-2xl border border-white/20 hover:bg-white/20 transition-all text-center" data-ps="src/components/home/Hero.astro:8zc20">
+          Learn More
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="absolute bottom-0 left-0 right-0 p-8 hidden lg:block" data-ps="src/components/home/Hero.astro:ecxgf7">
+    <div class="container mx-auto flex items-center gap-12 text-white/50 font-bold uppercase tracking-widest text-sm" data-ps="src/components/home/Hero.astro:ecxgf6">
+      <div class="flex items-center gap-4" data-ps="src/components/home/Hero.astro:ecxgf5">
+        <span class="text-red-500 text-2xl font-black" data-ps="src/components/home/Hero.astro:z1i1wn">500+</span>
+        Recipes
+      </div>
+      <div class="w-px h-8 bg-white/10" data-ps="src/components/home/Hero.astro:ecxgf4"></div>
+      <div class="flex items-center gap-4" data-ps="src/components/home/Hero.astro:ecxgf3">
+        <span class="text-red-500 text-2xl font-black" data-ps="src/components/home/Hero.astro:z1i1wo">10k</span>
+        Monthly Visitors
+      </div>
+      <div class="w-px h-8 bg-white/10" data-ps="src/components/home/Hero.astro:iy4tah"></div>
+      <div class="flex items-center gap-4" data-ps="src/components/home/Hero.astro:iy4tag">
+        <span class="text-red-500 text-2xl font-black" data-ps="src/components/home/Hero.astro:z1i1xa">50+</span>
+        Cuisines
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>

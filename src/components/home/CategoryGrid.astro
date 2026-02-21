@@ -1,0 +1,31 @@
+---
+import { siteConfig } from '../../config/site';
+
+const categories = [
+  { name: "Main Course", icon: "🥘", count: "42 Recipes", url: "/category/main-course/" },
+  { name: "Noodles", icon: "🍜", count: "18 Recipes", url: "/category/noodles/" },
+  { name: "Soup", icon: "🥣", count: "15 Recipes", url: "/category/soup/" },
+  { name: "Vegetables", icon: "🥬", count: "12 Recipes", url: "/category/vegetables/" },
+  { name: "Chicken", icon: "🍗", count: "28 Recipes", url: "/category/chicken/" },
+  { name: "Rice", icon: "🍚", count: "24 Recipes", url: "/category/rice/" }
+];
+---
+
+<section class="py-24 bg-zinc-950 text-white" data-ps="src/components/home/CategoryGrid.astro:f500gi">
+  <div class="container mx-auto px-4" data-ps="src/components/home/CategoryGrid.astro:hdvyma">
+    <div class="text-center mb-16" data-ps="src/components/home/CategoryGrid.astro:hdvymb">
+      <h2 class="text-4xl font-bold tracking-tight mb-4" data-ps="src/components/home/CategoryGrid.astro:upphi7">Browse by Category</h2>
+      <p class="text-zinc-400 max-w-2xl mx-auto text-lg" data-ps="src/components/home/CategoryGrid.astro:xuv1qf">Find exactly what you're looking for with our organized recipe collections.</p>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6" data-ps="src/components/home/CategoryGrid.astro:hdvymc">
+      {categories.map((cat) => (
+        <a href={cat.url} class="group bg-zinc-900 p-8 rounded-2xl border border-zinc-800 hover:border-red-600 hover:bg-zinc-800 transition-all text-center" data-ps="src/components/home/CategoryGrid.astro:xmltpn">
+          <div class="text-5xl mb-6 transform group-hover:scale-110 transition-transform" data-ps="src/components/home/CategoryGrid.astro:hdvymd">{cat.icon}</div>
+          <h3 class="text-xl font-bold mb-2" data-ps="src/components/home/CategoryGrid.astro:v6r4n4">{cat.name}</h3>
+          <p class="text-zinc-400 text-sm font-medium" data-ps="src/components/home/CategoryGrid.astro:xuv1qg">{cat.count}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
