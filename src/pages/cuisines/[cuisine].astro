@@ -53,15 +53,12 @@ const jsonLd = {
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
         {sortedRecipes.map((recipe) => (
-          <a href={`/recipes/${recipe.slug}/`} class="group flex flex-col bg-white rounded-3xl overflow-hidden border border-zinc-100 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+          <a href={`/recipes/${recipe.slug}`} class="group flex flex-col bg-white rounded-3xl overflow-hidden border border-zinc-100 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
             <div class="relative aspect-video overflow-hidden">
               <img
                 src={recipe.data.image}
                 alt={recipe.data.title}
-                width="800"
-                height="450"
                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                loading="lazy"
               />
               <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
                 <span class="text-white font-bold flex items-center gap-2">
@@ -95,7 +92,7 @@ const jsonLd = {
       {sortedRecipes.length === 0 && (
         <div class="text-center py-32 bg-zinc-50 rounded-3xl border-2 border-dashed border-zinc-200">
           <p class="text-2xl font-bold text-zinc-400 italic">No {name} recipes found yet. Check back soon!</p>
-          <a href="/recipes/" class="mt-8 inline-flex items-center gap-2 text-red-600 font-black uppercase tracking-widest hover:gap-4 transition-all">
+          <a href="/recipes" class="mt-8 inline-flex items-center gap-2 text-red-600 font-black uppercase tracking-widest hover:gap-4 transition-all">
             Browse all recipes
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
           </a>

@@ -129,11 +129,9 @@ export function RecipeSlider({ recipes, title = "Explore More Asian Recipes" }: 
               className="flex-shrink-0 w-[calc(25%-0.75rem)] md:w-[calc(25%-1.125rem)] min-w-[160px] group snap-start"
             >
               <div className="relative aspect-[4/5] rounded-2xl overflow-hidden mb-4 shadow-sm group-hover:shadow-md transition-shadow">
-                <img
-                  src={recipe.image || 'https://cdn.pagesmith.app/97394d4a/images/Screenshot-2026-02-19-085606-768-768.webp'}
+                <img 
+                  src={recipe.image || 'https://cdn.pagesmith.app/97394d4a/images/Screenshot-2026-02-19-085606-768-768.webp'} 
                   alt={recipe.title}
-                  width="320"
-                  height="400"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                 />
@@ -217,11 +215,9 @@ export function RecipeSlider({ recipes, title = "Explore More Asian Recipes" }: 
                     className="group"
                   >
                     <div className="relative aspect-[4/5] rounded-xl overflow-hidden mb-4 shadow-sm group-hover:shadow-md transition-shadow">
-                      <img
-                        src={recipe.image || 'https://cdn.pagesmith.app/97394d4a/images/Screenshot-2026-02-19-085606-768-768.webp'}
+                      <img 
+                        src={recipe.image || 'https://cdn.pagesmith.app/97394d4a/images/Screenshot-2026-02-19-085606-768-768.webp'} 
                         alt={recipe.title}
-                        width="320"
-                        height="400"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
                       />

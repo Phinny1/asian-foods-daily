@@ -78,11 +78,9 @@ const jsonLd: Record<string, any> = {
   url: new URL(Astro.url.pathname, SITE.url).toString(),
 };
 
-// Add modified date (fall back to published date if no update date)
+// Add modified date if available
 if (frontmatter.updatedDate) {
   jsonLd.dateModified = frontmatter.updatedDate.toISOString();
-} else if (frontmatter.pubDate) {
-  jsonLd.dateModified = frontmatter.pubDate.toISOString();
 }
 
 // Add image to schema if available
@@ -107,40 +105,6 @@ if (instructions.length > 0) {
     text: step,
   }));
 }
-
-// Build breadcrumb structured data
-const breadcrumbLd = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    {
-      '@type': 'ListItem',
-      position: 1,
-      name: 'Home',
-      item: SITE.url,
-    },
-    {
-      '@type': 'ListItem',
-      position: 2,
-      name: 'Recipes',
-      item: `${SITE.url}/recipes/`,
-    },
-    {
-      '@type': 'ListItem',
-      position: 3,
-      name: frontmatter.title,
-    },
-  ],
-};
-
-// Combine into @graph
-const combinedJsonLd = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    { ...jsonLd, '@context': undefined },
-    { ...breadcrumbLd, '@context': undefined },
-  ],
-};
 ---
 
 <!doctype html>
@@ -152,9 +116,9 @@ const combinedJsonLd = {
       image={socialImage}
       type="article"
       publishedTime={frontmatter.pubDate?.toISOString?.()}
-      modifiedTime={(frontmatter.updatedDate || frontmatter.pubDate)?.toISOString?.()}
+      modifiedTime={frontmatter.updatedDate?.toISOString?.()}
       canonicalUrl={frontmatter.canonicalUrl}
-      jsonLd={combinedJsonLd}
+      jsonLd={jsonLd}
     />
   </head>
   <body class="min-h-screen bg-white" style="color: var(--text);" data-ps="src/layouts/RecipeLayout.astro:body">
@@ -178,8 +142,6 @@ const combinedJsonLd = {
               <img
                 src={frontmatter.image}
                 alt={frontmatter.title}
-                width="960"
-                height="500"
                 class="w-full h-auto rounded-3xl shadow-xl object-cover max-h-[500px]"
                 loading="eager" data-ps="src/layouts/RecipeLayout.astro:r3f51z" />
             </div>

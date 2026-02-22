@@ -54,10 +54,8 @@ const displayTitle = categoryFilter
     <!-- Hero Section -->
     <section class="bg-zinc-900 py-24 px-4 overflow-hidden relative" data-ps="src/pages/recipes/index.astro:mxwryf">
       <div class="absolute inset-0 opacity-20" data-ps="src/pages/recipes/index.astro:776adu">
-        <img crossorigin="anonymous" src="https://images.unsplash.com/photo-1664337873053-840ea51d271d?auto=format&w=1920&q=80"
-          alt="Asian Food background"
-          width="1920"
-          height="1080"
+        <img crossorigin="anonymous" src="https://images.unsplash.com/photo-1664337873053-840ea51d271d?auto=format&w=1920&q=80" 
+          alt="Asian Food background" 
           class="w-full h-full object-cover" data-ps="src/pages/recipes/index.astro:7ktnls"
         />
       </div>
@@ -74,13 +72,10 @@ const displayTitle = categoryFilter
           {sortedRecipes.map((recipe) => (
             <a href={`/recipes/${recipe.slug}/`} class="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col" data-ps="src/pages/recipes/index.astro:9kbo9v">
               <div class="aspect-[4/3] overflow-hidden relative" data-ps="src/pages/recipes/index.astro:776adq">
-                <img
-                  src={recipe.data.image || "https://images.unsplash.com/photo-1651836170595-4b0e7cba3952?auto=format&w=800&q=80"}
+                <img 
+                  src={recipe.data.image || "https://images.unsplash.com/photo-1651836170595-4b0e7cba3952?auto=format&w=800&q=80"} 
                   alt={recipe.data.title}
-                  width="800"
-                  height="600"
                   class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-ps="src/pages/recipes/index.astro:7ktnlr"
-                  loading="lazy"
                 />
                 <div class="absolute top-4 left-4 bg-red-600 text-white text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full" data-ps="src/pages/recipes/index.astro:776adp">
                   {recipe.data.category || 'Recipe'}

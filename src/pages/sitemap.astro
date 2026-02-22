@@ -23,29 +23,29 @@ const sitemapSections = [
     title: "Main Pages",
     links: [
       { name: "Homepage", url: "/" },
-      { name: "All Recipes", url: "/recipes/" },
-      { name: "Blog", url: "/blog/" },
+      { name: "All Recipes", url: "/recipes" },
+      { name: "Blog", url: "/blog" },
     ]
   },
   {
     title: "Categories",
     links: categories.map(cat => ({
       name: cat,
-      url: `/category/${cat?.toLowerCase().replace(/\s+/g, '-')}/`
+      url: `/category/${cat?.toLowerCase().replace(/\s+/g, '-')}`
     }))
   },
   {
     title: "Recipes",
     links: recipes.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()).map(r => ({
       name: r.data.title,
-      url: `/recipes/${r.slug}/`
+      url: `/recipes/${r.slug}`
     }))
   },
   {
     title: "Blog Articles",
     links: blogPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()).map(p => ({
       name: p.data.title,
-      url: `/blog/${p.slug}/`
+      url: `/blog/${p.slug}`
     }))
   }
 ];
