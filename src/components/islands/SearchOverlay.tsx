@@ -118,12 +118,12 @@ export default function SearchOverlay({ posts }: { posts: Post[] }) {
               {filteredPosts.map((post) => (
                 <a 
                   key={post.slug}
-                  href={`/${post.collection === 'recipes' ? 'recipes' : 'blog'}/${post.slug}`}
+                  href={`/${post.collection === 'recipes' ? 'recipes' : 'blog'}/${post.slug}/`}
                   className="flex items-center gap-6 p-4 rounded-3xl hover:bg-zinc-50 transition-all group"
                   onClick={closeSearch}
                 >
                   {post.data.image && (
-                    <img src={post.data.image} alt="" className="w-24 h-24 object-cover rounded-2xl shadow-sm group-hover:scale-105 transition-transform duration-300" />
+                    <img src={post.data.image} alt={post.data.title} width="96" height="96" className="w-24 h-24 object-cover rounded-2xl shadow-sm group-hover:scale-105 transition-transform duration-300" />
                   )}
                   <div className="flex-1 min-w-0">
                     <span className="inline-block px-2 py-1 bg-zinc-100 text-zinc-500 text-xs font-bold uppercase tracking-wider rounded-md mb-2">{post.data.category || 'Recipe'}</span>

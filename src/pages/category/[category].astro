@@ -69,8 +69,10 @@ const displayTitle = `${name} Recipes`;
     <!-- Hero Section -->
     <section class="bg-zinc-900 py-24 px-4 overflow-hidden relative" data-ps="src/pages/category/[category].astro:mohpyl">
       <div class="absolute inset-0 opacity-20" data-ps="src/pages/category/[category].astro:5pby5h">
-        <img crossorigin="anonymous" src="https://images.unsplash.com/photo-1664337873053-840ea51d271d?auto=format&w=1920&q=80" 
-          alt={`${name} background`} 
+        <img crossorigin="anonymous" src="https://images.unsplash.com/photo-1664337873053-840ea51d271d?auto=format&w=1920&q=80"
+          alt={`${name} recipes background`}
+          width="1920"
+          height="1080"
           class="w-full h-full object-cover" data-ps="src/pages/category/[category].astro:w8t6do"
         />
       </div>
@@ -89,12 +91,15 @@ const displayTitle = `${name} Recipes`;
       <div class="container mx-auto" data-ps="src/pages/category/[category].astro:5pby5f">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" data-ps="src/pages/category/[category].astro:5pby5e">
           {sortedRecipes.map((recipe) => (
-            <a href={`/recipes/${recipe.slug}`} class="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col" data-ps="src/pages/category/[category].astro:o5n0kp">
+            <a href={`/recipes/${recipe.slug}/`} class="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col" data-ps="src/pages/category/[category].astro:o5n0kp">
               <div class="aspect-[4/3] overflow-hidden relative" data-ps="src/pages/category/[category].astro:5pby5d">
-                <img 
-                  src={recipe.data.image || "https://images.unsplash.com/photo-1651836170595-4b0e7cba3952?auto=format&w=800&q=80"} 
+                <img
+                  src={recipe.data.image || "https://images.unsplash.com/photo-1651836170595-4b0e7cba3952?auto=format&w=800&q=80"}
                   alt={recipe.data.title}
+                  width="800"
+                  height="600"
                   class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-ps="src/pages/category/[category].astro:w8t6dn"
+                  loading="lazy"
                 />
                 <div class="absolute top-4 left-4 bg-red-600 text-white text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full" data-ps="src/pages/category/[category].astro:5pby5c">
                   {recipe.data.category || 'Recipe'}
@@ -121,7 +126,7 @@ const displayTitle = `${name} Recipes`;
         )}
         
         <div class="mt-16 text-center" data-ps="src/pages/category/[category].astro:yr2ap8">
-          <a href="/recipes" class="inline-flex items-center gap-2 text-red-600 font-bold hover:text-red-700 transition-colors" data-ps="src/pages/category/[category].astro:o5n0ko">
+          <a href="/recipes/" class="inline-flex items-center gap-2 text-red-600 font-bold hover:text-red-700 transition-colors" data-ps="src/pages/category/[category].astro:o5n0ko">
             ← Back to all recipes
           </a>
         </div>

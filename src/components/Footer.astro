@@ -68,7 +68,7 @@ const recentRecipes = allRecipes
             <a href={`/recipes/${recipe.slug}/`} class="flex gap-4 group" data-ps={`src/components/Footer.astro:recent-${recipe.slug}`}>
               <div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-zinc-800" data-ps={`src/components/Footer.astro:img-${recipe.slug}`}>
                 {recipe.data.image && (
-                  <img src={recipe.data.image} alt={recipe.data.title} class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" data-ps="src/components/Footer.astro:4qdjex" />
+                  <img src={recipe.data.image} alt={recipe.data.title} width="64" height="64" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" loading="lazy" data-ps="src/components/Footer.astro:4qdjex" />
                 )}
               </div>
               <div data-ps={`src/components/Footer.astro:txt-${recipe.slug}`}>
