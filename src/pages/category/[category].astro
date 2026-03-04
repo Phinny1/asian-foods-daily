@@ -9,7 +9,14 @@ export async function getStaticPaths() {
     { slug: 'soup', name: 'Soup' },
     { slug: 'vegetables', name: 'Vegetables' },
     { slug: 'chicken', name: 'Chicken' },
-    { slug: 'rice', name: 'Rice' }
+    { slug: 'rice', name: 'Rice' },
+    { slug: 'easy-weeknight-dinners', name: 'Easy Weeknight Dinners' },
+    { slug: 'chinese-takeout-at-home', name: 'Chinese Takeout at Home' },
+    { slug: 'stir-fry-recipes', name: 'Stir-Fry Recipes' },
+    { slug: 'noodles-and-rice-bowls', name: 'Noodles & Rice Bowls' },
+    { slug: 'asian-soups-and-stews', name: 'Asian Soups & Stews' },
+    { slug: 'dim-sum-and-dumplings', name: 'Dim Sum & Dumplings' },
+    { slug: 'healthy-asian-recipes', name: 'Healthy Asian Recipes' }
   ];
 
   return categories.map(cat => ({
@@ -42,16 +49,50 @@ const filterFn = (entry) => {
   const filterNorm = normalize(filter);
   const catNorm = normalize(cat);
 
-  const categoryMatch = cat === filter ||
-         cat.includes(filter) ||
-         filter.includes(cat) ||
-         catNorm === filterNorm ||
-         catNorm.includes(filterNorm) ||
-         filterNorm.includes(catNorm);
+  // Direct category match - more restrictive to avoid bleed-over
+  const categoryMatch = cat === filter || catNorm === filterNorm;
 
-  const keywordMatch = filter === 'rice' && (title.includes('rice') || title.includes('nasi') || title.includes('arroz'));
+  // Keyword matches for specific thematic categories with strict exclusions
+  const thematicMatch = 
+    (slug === 'easy-weeknight-dinners' && (
+      (title.includes('30 minute') || title.includes('15 minute') || title.includes('20 minute') || title.includes('quick') || title.includes('30-minute') || title.includes('15-minute') || title.includes('20-minute') || title.includes('easy')) &&
+      !title.includes('lechon') && !title.includes('lumpia') && !title.includes('filipino') && !title.includes('roasted pork')
+    )) ||
+    (slug === 'chinese-takeout-at-home' && (
+      (title.includes('takeout') || title.includes('restaurant style') || title.includes('restaurant-style') || (title.includes('chinese') && (title.includes('chicken') || title.includes('beef') || title.includes('pork') || title.includes('shrimp')))) &&
+      !title.includes('lechon') && !title.includes('lumpia') && !title.includes('filipino') && !title.includes('roasted pork') && !title.includes('adobo') && !title.includes('tandoori roti')
+    )) ||
+    (slug === 'stir-fry-recipes' && (
+      (title.includes('stir-fry') || title.includes('stir fry') || title.includes('wok') || title.includes('sauteed') || title.includes('mongolian') || title.includes('pepper steak') || title.includes('mapo tofu') || title.includes('eggplant with garlic sauce')) &&
+      !title.includes('soup') && !title.includes('stew') && !title.includes('dumpling') && !title.includes('curry') && !title.includes('braised')
+    )) ||
+    (slug === 'noodles-and-rice-bowls' && (
+      (title.includes('noodle') || title.includes('rice bowl') || title.includes('fried rice') || (title.includes('rice') && title.includes('bowl'))) &&
+      !title.includes('soup') && !title.includes('salad') && !title.includes('stew') && !title.includes('curry') && !title.includes('broth')
+    )) ||
+    (slug === 'asian-soups-and-stews' && (
+      (title.includes('soup') || title.includes('stew') || title.includes('broth') || title.includes('pho') || title.includes('ramen') || title.includes('congee') || title.includes('laksa') || title.includes('curry') || title.includes('udon') || title.includes('jjigae') || title.includes('shabu') || title.includes('hot pot') || title.includes('tom yum') || title.includes('braised')) &&
+      !title.includes('fried rice') && !title.includes('stir-fry') && !title.includes('salad')
+    )) ||
+    (slug === 'dim-sum-and-dumplings' && (
+      (title.includes('dumpling') || title.includes('dim sum') || title.includes('siu mai') || title.includes('bun') || title.includes('gyoza') || title.includes('potsticker') || title.includes('spring roll') || title.includes('wonton') || title.includes('bao') || title.includes('shumai') || title.includes('lumpia') || title.includes('egg roll')) &&
+      !title.includes('rice bowl') && !title.includes('soup') && !title.includes('stew') && !title.includes('quick chicken buns') && !title.includes('lumpia')
+    )) ||
+    (slug === 'healthy-asian-recipes' && (
+      (title.includes('healthy') || title.includes('salad') || title.includes('nutritious') || title.includes('vegetable') || title.includes('steamed') || title.includes('fresh') || title.includes('light') || title.includes('tofu') || title.includes('cucumber') || title.includes('boiled') || title.includes('low calorie') || title.includes('low-calorie')) &&
+      !title.includes('fried') && !title.includes('bbq') && !title.includes('pork belly') && !title.includes('sugar-packed') && !title.includes('heavy')
+    ));
 
-  return categoryMatch || keywordMatch;
+  const keywordMatch = (filter === 'rice' || slug === 'rice') && (title.includes('rice') || title.includes('nasi') || title.includes('arroz')) && !title.includes('noodle') && !title.includes('dumpling');
+
+  // Hardcoded slug-to-slug or slug-to-title keyword match for precision
+  const slugMatch = 
+    (slug === 'noodles' && title.includes('noodle')) ||
+    (slug === 'soup' && title.includes('soup')) ||
+    (slug === 'chicken' && title.includes('chicken')) ||
+    (slug === 'vegetables' && (title.includes('vegetable') || title.includes('broccoli') || title.includes('cabbage') || title.includes('eggplant')));
+
+  return (categoryMatch && !thematicMatch) || thematicMatch || keywordMatch || slugMatch;
 };
 
 // Fetch only from recipes collection for category pages
@@ -61,7 +102,7 @@ const sortedRecipes = recipes.sort(
   (a, b) => (b.data?.pubDate?.valueOf() || 0) - (a.data?.pubDate?.valueOf() || 0)
 );
 
-const displayTitle = `${name} Recipes`;
+const displayTitle = `${name}`;
 ---
 
 <BaseLayout title={`${displayTitle} | Asian Foods Daily`}>
@@ -85,29 +126,29 @@ const displayTitle = `${name} Recipes`;
     </section>
 
     <!-- Recipe Grid -->
-    <section class="py-20 px-4" data-ps="src/pages/category/[category].astro:mohpym">
+    <section class="py-10 px-4" data-ps="src/pages/category/[category].astro:mohpym">
       <div class="container mx-auto" data-ps="src/pages/category/[category].astro:5pby5f">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" data-ps="src/pages/category/[category].astro:5pby5e">
+        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-10" data-ps="src/pages/category/[category].astro:5pby5e">
           {sortedRecipes.map((recipe) => (
-            <a href={`/recipes/${recipe.slug}`} class="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col" data-ps="src/pages/category/[category].astro:o5n0kp">
+            <a href={`/recipes/${recipe.slug}/`} class="group bg-white rounded-2xl md:rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col" data-ps="src/pages/category/[category].astro:o5n0kp">
               <div class="aspect-[4/3] overflow-hidden relative" data-ps="src/pages/category/[category].astro:5pby5d">
                 <img 
                   src={recipe.data.image || "https://images.unsplash.com/photo-1651836170595-4b0e7cba3952?auto=format&w=800&q=80"} 
                   alt={recipe.data.title}
                   class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-ps="src/pages/category/[category].astro:w8t6dn"
                 />
-                <div class="absolute top-4 left-4 bg-red-600 text-white text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full" data-ps="src/pages/category/[category].astro:5pby5c">
+                <div class="absolute top-2 left-2 md:top-4 md:left-4 bg-red-600 text-white text-[10px] md:text-xs font-black uppercase tracking-widest px-2 py-1 md:px-4 md:py-2 rounded-full" data-ps="src/pages/category/[category].astro:5pby5c">
                   {recipe.data.category || 'Recipe'}
                 </div>
               </div>
-              <div class="p-8 flex-grow flex flex-col" data-ps="src/pages/category/[category].astro:5pby5b">
-                <div class="flex items-center gap-2 text-zinc-600 text-xs font-bold uppercase tracking-widest mb-4" data-ps="src/pages/category/[category].astro:5pby5a">
+              <div class="p-4 md:p-8 flex-grow flex flex-col" data-ps="src/pages/category/[category].astro:5pby5b">
+                <div class="hidden md:flex items-center gap-2 text-zinc-600 text-xs font-bold uppercase tracking-widest mb-4" data-ps="src/pages/category/[category].astro:5pby5a">
                   <span data-ps="src/pages/category/[category].astro:mnc02r">{recipe.data.pubDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
                 </div>
-                <h2 class="text-2xl font-black text-zinc-900 group-hover:text-red-600 transition-colors mb-4 line-clamp-2" data-ps="src/pages/category/[category].astro:k4khbx">{recipe.data.title}</h2>
-                <p class="text-zinc-600 font-medium mb-8 line-clamp-3" data-ps="src/pages/category/[category].astro:h1p3uz">{recipe.data.description}</p>
+                <h2 class="text-base md:text-2xl font-black text-zinc-900 group-hover:text-red-600 transition-colors mb-2 md:mb-4 line-clamp-2" data-ps="src/pages/category/[category].astro:k4khbx">{recipe.data.title}</h2>
+                <p class="hidden md:block text-zinc-600 font-medium mb-8 line-clamp-3" data-ps="src/pages/category/[category].astro:h1p3uz">{recipe.data.description}</p>
                 <div class="mt-auto flex items-center justify-between" data-ps="src/pages/category/[category].astro:5pby59">
-                  <span class="text-zinc-900 font-black text-sm uppercase tracking-tighter group-hover:translate-x-2 transition-transform duration-300" data-ps="src/pages/category/[category].astro:mnc02q">View Recipe →</span>
+                  <span class="text-zinc-900 font-black text-[10px] md:text-sm uppercase tracking-tighter group-hover:translate-x-2 transition-transform duration-300" data-ps="src/pages/category/[category].astro:mnc02q">View Recipe →</span>
                 </div>
               </div>
             </a>
@@ -115,13 +156,13 @@ const displayTitle = `${name} Recipes`;
         </div>
 
         {sortedRecipes.length === 0 && (
-          <div class="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-zinc-200" data-ps="src/pages/category/[category].astro:5pby58">
+          <div class="text-center py-10 bg-white rounded-3xl border-2 border-dashed border-zinc-200" data-ps="src/pages/category/[category].astro:5pby58">
             <h3 class="text-2xl font-bold text-zinc-600" data-ps="src/pages/category/[category].astro:5g5k4c">Coming soon! We're preparing our best {name.toLowerCase()} recipes for you.</h3>
           </div>
         )}
         
         <div class="mt-16 text-center" data-ps="src/pages/category/[category].astro:yr2ap8">
-          <a href="/recipes" class="inline-flex items-center gap-2 text-red-600 font-bold hover:text-red-700 transition-colors" data-ps="src/pages/category/[category].astro:o5n0ko">
+          <a href="/recipes/" class="inline-flex items-center gap-2 text-red-600 font-bold hover:text-red-700 transition-colors" data-ps="src/pages/category/[category].astro:o5n0ko">
             ← Back to all recipes
           </a>
         </div>

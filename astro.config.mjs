@@ -5,7 +5,10 @@ import cloudflare from '@astrojs/cloudflare';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@astrojs/react';
 import { defineConfig } from 'astro/config';
+import remarkGfm from 'remark-gfm';
 import remarkToc from './src/plugins/remark-toc.mjs';
+
+const siteUrl = process.env.SITE_URL || 'https://www.asianfoodsdaily.com';
 
 /** @type {import('astro').AstroUserConfig} */
 export default defineConfig({
@@ -14,10 +17,10 @@ export default defineConfig({
   adapter: cloudflare({
     imageService: 'passthrough',
   }),
-  site: 'https://www.asianfoodsdaily.com',
+  site: siteUrl,
   integrations: [
-    sitemap(), // Added sitemap integration
     mdx(),
+    sitemap(),
     react(),
   ],
   markdown: {
@@ -25,7 +28,7 @@ export default defineConfig({
     shikiConfig: {
       theme: 'github-dark',
     },
-    remarkPlugins: [remarkToc],
+    remarkPlugins: [remarkGfm, remarkToc],
   },
   build: {
     inlineStylesheets: 'always',
@@ -33,7 +36,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     resolve: {
-      alias: import.meta.env.PROD ? {
+      alias: process.env.NODE_ENV === 'production' ? {
         'react-dom/server': 'react-dom/server.edge',
       } : {},
     },

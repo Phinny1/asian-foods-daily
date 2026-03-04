@@ -114,20 +114,24 @@ export default function SearchOverlay({ posts }: { posts: Post[] }) {
           )}
 
           {filteredPosts.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-8">
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-3 md:gap-4 pb-8">
               {filteredPosts.map((post) => (
                 <a 
                   key={post.slug}
                   href={`/${post.collection === 'recipes' ? 'recipes' : 'blog'}/${post.slug}`}
-                  className="flex items-center gap-6 p-4 rounded-3xl hover:bg-zinc-50 transition-all group"
+                  className="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 p-2 md:p-4 rounded-2xl md:rounded-3xl hover:bg-zinc-50 transition-all group"
                   onClick={closeSearch}
                 >
                   {post.data.image && (
-                    <img src={post.data.image} alt="" className="w-24 h-24 object-cover rounded-2xl shadow-sm group-hover:scale-105 transition-transform duration-300" />
+                    <img 
+                      src={post.data.image} 
+                      alt="" 
+                      className="w-full md:w-24 aspect-square md:aspect-auto md:h-24 object-cover rounded-xl md:rounded-2xl shadow-sm group-hover:scale-105 transition-transform duration-300" 
+                    />
                   )}
                   <div className="flex-1 min-w-0">
-                    <span className="inline-block px-2 py-1 bg-zinc-100 text-zinc-500 text-xs font-bold uppercase tracking-wider rounded-md mb-2">{post.data.category || 'Recipe'}</span>
-                    <h3 className="text-xl font-bold text-zinc-900 group-hover:text-red-600 transition-colors line-clamp-2 leading-tight">{post.data.title}</h3>
+                    <span className="inline-block px-2 py-0.5 md:py-1 bg-zinc-100 text-zinc-500 text-[10px] md:text-xs font-bold uppercase tracking-wider rounded mb-1 md:mb-2">{post.data.category || 'Recipe'}</span>
+                    <h3 className="text-sm md:text-xl font-bold text-zinc-900 group-hover:text-red-600 transition-colors line-clamp-2 leading-tight">{post.data.title}</h3>
                   </div>
                 </a>
               ))}

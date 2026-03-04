@@ -88,9 +88,14 @@ const recentRecipes = allRecipes
     </div>
 
     <div class="pt-12 border-t border-zinc-900 flex flex-col md:flex-row justify-between items-center gap-8" data-ps="src/components/Footer.astro:256hn1">
-      <p class="text-zinc-400 text-sm" data-ps="src/components/Footer.astro:csf9s">
-        © {new Date().getFullYear()} Asian Foods Daily. All rights reserved.
-      </p>
+      <div class="flex flex-col gap-1" data-ps="src/components/Footer.astro:p4vf8b">
+        <p class="text-zinc-400 text-sm" data-ps="src/components/Footer.astro:csf9s">
+          © {new Date().getFullYear()} Asian Foods Daily. All rights reserved.
+        </p>
+        <p class="text-zinc-400 text-xs" data-ps="src/components/Footer.astro:testing-note">
+          Most recipes are personally tested in my home kitchen
+        </p>
+      </div>
       <p class="text-zinc-400 text-sm flex items-center gap-2" data-ps="src/components/Footer.astro:csf9r">
         Made with <span class="text-red-400" data-ps="src/components/Footer.astro:abywy6">❤</span> for Asian Food Lovers
       </p>

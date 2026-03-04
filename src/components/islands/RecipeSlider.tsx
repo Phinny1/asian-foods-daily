@@ -205,9 +205,9 @@ export function RecipeSlider({ recipes, title = "Explore More Asian Recipes" }: 
             </div>
             
             {/* Modal Body */}
-            <div className="flex-1 overflow-y-auto p-6 md:p-10">
+            <div className="flex-1 overflow-y-auto p-4 md:p-10">
               {modalFilteredRecipes.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-8">
                   {modalFilteredRecipes.map((recipe) => (
                   <a 
                     key={recipe.slug + '-modal'}

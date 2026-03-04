@@ -11,6 +11,23 @@ const filterFn = (entry: any) => {
 // Fetch only from blog collection
 const blogPosts = await getCollection('blog', filterFn);
 
+const blogAltTags: Record<string, string> = {
+  'Why Miso Table Sauce Belongs in Every Kitchen': 'Why Miso Table Sauce Belongs in Every Kitchen - Japanese Cooking Guide',
+  '10 Must-Try Asian Street Foods': '10 Must-Try Asian Street Foods - Asian Street Food Culture Guide',
+  'How to Make Hand-Pulled Noodles from Scratch': 'How to Make Hand-Pulled Noodles from Scratch - Chinese Noodle Making Guide',
+  'Boba Tea Evolution: From Taiwanese Tea Shops to a Global Phenomenon': 'Boba Tea Evolution - Taiwanese Bubble Tea Culture Guide',
+  'Plant-Based Alternatives in Asian Cuisine': 'Plant-Based Alternatives in Asian Cuisine - Asian Vegan Food Culture Guide',
+  'Japanese vs. Korean BBQ: Techniques, Sauces, and Best Dishes': 'Japanese vs. Korean BBQ - Japanese and Korean Food Culture Guide',
+  '7 Asian Breakfast Dishes Healthier Than Avocado Toast': '7 Asian Breakfast Dishes Healthier Than Avocado Toast - Asian Healthy Eating Guide',
+  'The Role of Fermented Foods in Asian Diets': 'The Role of Fermented Foods in Asian Diets - Asian Food Culture Article',
+  'Which Tastes Better: Dumplings or Gyoza?': 'Which Tastes Better: Dumplings or Gyoza? - Chinese and Japanese Food Culture Guide',
+  'Is Rice Really Life According to Filipinos?': 'Is Rice Really Life According to Filipinos? - Filipino Food Culture Article',
+  'Regional Variations of Ramen Across Asia': 'Regional Variations of Ramen Across Asia - Japanese Noodle Culture Guide',
+  '10 Underrated Southeast Asian Desserts You’ve Never Heard Of': '10 Underrated Southeast Asian Desserts - Southeast Asian Dessert Guide',
+  'Is Pad Kra Pao Really Thailand’s Ultimate Street Food?': 'Is Pad Kra Pao Really Thailand’s Ultimate Street Food? - Thai Street Food Culture Article',
+  'Why Pancit Palabok is the Ultimate Filipino Noodle Dish': 'Why Pancit Palabok is the Ultimate Filipino Noodle Dish - Filipino Noodle Culture Guide'
+};
+
 const url = new URL(Astro.request.url);
 const query = url.searchParams.get('q')?.toLowerCase() || '';
 
@@ -26,7 +43,7 @@ const sortedPosts = filteredPosts.sort(
 );
 ---
 
-<BaseLayout title="Blogs | Asianfoodsdaily"
+<BaseLayout title="Asian Food Blog — Cooking Guides & Culture | Asian Foods Daily"
   description="Explore food stories, cooking tips, kitchen guides, and cultural insights on Asianfoodsdaily. Fresh, inspiring blog posts for curious home cooks."
   ogType="website"
   noIndex={false}>
@@ -36,37 +53,37 @@ const sortedPosts = filteredPosts.sort(
       <p class="text-lg text-slate-600" data-ps="src/pages/blog/index.astro:60ko9y">Dive into articles that explore Asian culinary traditions, ingredient deep‑dives, cooking tips, and the heritage behind your favorite dishes.</p>
     </div>
 
-    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-2 max-w-5xl mx-auto" data-ps="src/pages/blog/index.astro:z9lr8o">
+    <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-8 max-w-5xl mx-auto" data-ps="src/pages/blog/index.astro:z9lr8o">
       {sortedPosts.map((post) => (
-        <article class="group bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300" data-ps="src/pages/blog/index.astro:joklk6">
+        <article class="group bg-white rounded-xl md:rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300" data-ps="src/pages/blog/index.astro:joklk6">
           <a href={`/blog/${post.slug}/`} class="block aspect-video overflow-hidden" data-ps="src/pages/blog/index.astro:d4ikzo">
             {post.data.image && (
               <img
                 src={post.data.image}
-                alt={post.data.title}
+                alt={blogAltTags[post.data.title] || `${post.data.title} - Asian Food Culture Guide`}
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 loading="lazy" data-ps="src/pages/blog/index.astro:5ecsla"
               />
             )}
           </a>
-          <div class="p-8" data-ps="src/pages/blog/index.astro:z9lr8n">
-            <div class="flex items-center gap-2 mb-4" data-ps="src/pages/blog/index.astro:z9lr8m">
-              <span class="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full uppercase tracking-wider" data-ps="src/pages/blog/index.astro:pg71q5">
+          <div class="p-4 md:p-8" data-ps="src/pages/blog/index.astro:z9lr8n">
+            <div class="flex flex-wrap items-center gap-2 mb-2 md:mb-4" data-ps="src/pages/blog/index.astro:z9lr8m">
+              <span class="px-2 py-0.5 md:px-3 md:py-1 bg-slate-100 text-slate-600 text-[10px] md:text-xs font-semibold rounded-full uppercase tracking-wider" data-ps="src/pages/blog/index.astro:pg71q5">
                 {post.data.category || 'Recipe'}
               </span>
-              <time class="text-sm text-slate-600">
-                {post.data.pubDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+              <time class="text-[10px] md:text-sm text-slate-600">
+                {post.data.pubDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
               </time>
             </div>
-            <h2 class="text-2xl font-bold mb-3 group-hover:text-[#38758B] transition-colors" data-ps="src/pages/blog/index.astro:if3dag">
+            <h2 class="text-base md:text-2xl font-bold mb-1 md:mb-3 group-hover:text-[#38758B] transition-colors line-clamp-2" data-ps="src/pages/blog/index.astro:if3dag">
               <a href={`/blog/${post.slug}/`} data-ps="src/pages/blog/index.astro:d4ikzn">
                 {post.data.title}
               </a>
             </h2>
-            <p class="text-slate-600 line-clamp-2 mb-6" data-ps="src/pages/blog/index.astro:60ko9x">{post.data.description}</p>
-            <a href={`/blog/${post.slug}/`} class="inline-flex items-center font-bold text-[#38758B] hover:gap-2 transition-all" data-ps="src/pages/blog/index.astro:d4ikzm">
-              View Recipe
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <p class="hidden md:block text-slate-600 line-clamp-2 mb-6" data-ps="src/pages/blog/index.astro:60ko9x">{post.data.description}</p>
+            <a href={`/blog/${post.slug}/`} class="inline-flex items-center text-xs md:text-base font-bold text-[#38758B] hover:gap-2 transition-all" data-ps="src/pages/blog/index.astro:d4ikzm">
+              Read More
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 md:w-5 md:h-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </a>

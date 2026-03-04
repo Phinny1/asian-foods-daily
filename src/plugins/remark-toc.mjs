@@ -78,7 +78,7 @@ function buildTocHtml(headings) {
     .join('\n      ');
 
   return `<nav class="remark-toc not-prose">
-    <h2 class="remark-toc-title">Table of Contents</h2>
+    <p class="remark-toc-title">Table of Contents</p>
     <ul>
       ${items}
     </ul>

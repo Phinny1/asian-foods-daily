@@ -12,14 +12,19 @@ export interface Props {
   image?: string;
   type?: string;
   jsonLd?: Record<string, any>;
+  noindex?: boolean;
 }
 
-const { title, description, image, type, jsonLd } = Astro.props;
+const { title, description, image, type, jsonLd, noindex = false } = Astro.props;
+
+// Explicitly force noindex for admin comments page
+const isNoIndex = noindex || Astro.url.pathname.includes('/admin/comments');
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta name="robots" content={isNoIndex ? "noindex, nofollow" : "index, follow"}>
     <link rel="icon" type="image/svg+xml" href="https://cdn.pagesmith.app/0e7aba88-9572-4f41-852d-7eff7f566a81/97394d4a-9281-4e16-8125-5ce5d075881b/favicon.svg" />
     <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.pagesmith.app/0e7aba88-9572-4f41-852d-7eff7f566a81/97394d4a-9281-4e16-8125-5ce5d075881b/apple-touch-icon.png" />
     <SEOHead
@@ -141,6 +146,31 @@ const { title, description, image, type, jsonLd } = Astro.props;
 
         document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale')
           .forEach((el) => revealObserver.observe(el));
+
+        // Fix external links and prevent 404s
+        document.addEventListener('click', (e) => {
+          const link = e.target.closest('a');
+          if (!link) return;
+          
+          let href = link.getAttribute('href');
+          if (!href) return;
+          
+          // Check if it's an external link (starts with http)
+          if (href.startsWith('http')) {
+            try {
+              const url = new URL(href);
+              // If hostname is different, it's external
+              if (url.hostname !== window.location.hostname) {
+                link.setAttribute('target', '_blank');
+                link.setAttribute('rel', 'noopener noreferrer');
+                // Stop other scripts from hijacking this click (e.g. client-side routers)
+                e.stopPropagation();
+              }
+            } catch (err) {
+              console.error('Invalid URL:', href);
+            }
+          }
+        }, true); // Capture phase to run before other listeners
       </script>
     </body>
   </html>

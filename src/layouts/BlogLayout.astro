@@ -24,18 +24,61 @@ const { frontmatter: frontmatterProp, mdxFilePath = '', headings = [], entry, ..
   [key: string]: any;
 };
 const frontmatter = frontmatterProp || props;
+const noindex = frontmatter.noindex || props.noindex || false;
 const postSlug = Astro.url.pathname;
+
+// Helper to ensure date is a Date object
+const parseDate = (d: any) => {
+  if (!d) return undefined;
+  if (d instanceof Date) return d;
+  const parsed = new Date(d);
+  return isNaN(parsed.getTime()) ? undefined : parsed;
+};
+const pubDate = parseDate(frontmatter.pubDate);
+const updatedDate = parseDate(frontmatter.updatedDate);
 
 // Fetch recipes for the slider
 const allRecipes = await getCollection('recipes');
+const currentSlug = postSlug.split('/').filter(Boolean).pop();
+const currentCategory = frontmatter.category?.toLowerCase();
+const currentTags = Array.isArray(frontmatter.tags) ? frontmatter.tags.map((t: any) => String(t).toLowerCase()) : [];
+const currentTitleWords = frontmatter.title ? frontmatter.title.toLowerCase().split(/\s+/).filter((w: string) => w.length > 3) : [];
+
 const otherRecipes = allRecipes
-  .map(r => ({
-    title: r.data.title,
-    slug: r.slug,
-    image: r.data.image,
-    category: r.data.category
-  }))
-  .sort(() => Math.random() - 0.5); // Randomize for "Explore" feel
+  .filter(r => r.slug !== currentSlug) // Exclude current post
+  .map(r => {
+    let score = 0;
+    const rData = r.data;
+    const rCategory = rData.category?.toLowerCase();
+    const rTags = Array.isArray(rData.tags) ? rData.tags.map((t: string) => t.toLowerCase()) : [];
+    const rTitle = rData.title.toLowerCase();
+
+    // 1. Category Match (Strong signal)
+    if (currentCategory && rCategory === currentCategory) {
+      score += 10;
+    }
+
+    // 2. Tag Overlap
+    const sharedTags = rTags.filter((t: string) => currentTags.includes(t));
+    score += sharedTags.length * 5;
+
+    // 3. Title Keyword Match
+    const matchesTitle = currentTitleWords.some((w: string) => rTitle.includes(w));
+    if (matchesTitle) {
+      score += 3;
+    }
+
+    return {
+      title: rData.title,
+      slug: r.slug,
+      image: rData.image,
+      category: rData.category,
+      score
+    };
+  })
+  .filter(r => r.score > 0) // Only relevant ones
+  .sort((a, b) => b.score - a.score) // Sort by relevance
+  .slice(0, 12); // Limit to top 12
 
 // TOC: enabled by default (matches schema default), can be disabled with toc: false
 const showToc = frontmatter.toc !== false && headings.length > 0;
@@ -47,45 +90,77 @@ const socialImage = frontmatter.ogImage || frontmatter.image;
 const schemaType = frontmatter.schemaType || 'Article';
 const schemaData = frontmatter.schemaData || {};
 
-// Base JSON-LD structure
-const jsonLd: Record<string, any> = {
+// Breadcrumb JSON-LD
+const breadcrumbLd = {
   '@context': 'https://schema.org',
-  '@type': schemaType,
-  name: frontmatter.title,
-  headline: frontmatter.title,
-  description: frontmatter.description,
-  datePublished: frontmatter.pubDate?.toISOString?.(),
-  author: {
-    '@type': 'Person',
-    name: frontmatter.author || SITE.name,
-  },
-  url: new URL(Astro.url.pathname, SITE.url).toString(),
+  '@type': 'BreadcrumbList',
+  'itemListElement': [
+    {
+      '@type': 'ListItem',
+      'position': 1,
+      'name': 'Home',
+      'item': SITE.url
+    },
+    {
+      '@type': 'ListItem',
+      'position': 2,
+      'name': 'Blog',
+      'item': new URL('/blog/', SITE.url).toString()
+    },
+    {
+      '@type': 'ListItem',
+      'position': 3,
+      'name': frontmatter.title,
+      'item': new URL(Astro.url.pathname, SITE.url).toString()
+    }
+  ]
 };
 
-// Add modified date if available
-if (frontmatter.updatedDate) {
-  jsonLd.dateModified = frontmatter.updatedDate.toISOString();
-}
-
-// Add image to schema if available
-if (socialImage) {
-  jsonLd.image = socialImage.startsWith('http')
-    ? socialImage
-    : new URL(socialImage, SITE.url).toString();
-}
+// Base JSON-LD structure
+const jsonLd: any[] = [
+  {
+  '@context': 'https://schema.org',
+  '@type': schemaType,
+  headline: frontmatter.title,
+  description: frontmatter.description,
+  author: {
+    '@type': 'Person',
+    name: 'AsianFoodsDaily',
+    url: SITE.url
+  },
+  datePublished: pubDate?.toISOString(),
+  dateModified: updatedDate ? updatedDate.toISOString() : pubDate?.toISOString(),
+  image: socialImage ? (socialImage.startsWith('http') ? socialImage : new URL(socialImage, SITE.url).toString()) : undefined,
+  publisher: {
+    '@type': 'Organization',
+    name: 'Asian Foods Daily',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://cdn.pagesmith.app/97394d4a-9281-4e16-8125-5ce5d075881b/Thai-Cucumber-Shrimp-Salad-2-1536x857-1536.webp'
+    }
+  },
+  keywords: frontmatter.tags ? (Array.isArray(frontmatter.tags) ? frontmatter.tags.join(', ') : frontmatter.tags) : undefined,
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': new URL(Astro.url.pathname, SITE.url).toString()
+  },
+  url: new URL(Astro.url.pathname, SITE.url).toString(),
+},
+breadcrumbLd
+];
 
 // Merge custom schemaData for specific schema types
 if (schemaType === 'Recipe' && schemaData) {
   // Recipe-specific fields
-  if (schemaData.prepTime) jsonLd.prepTime = `PT${schemaData.prepTime.replace(/\s+/g, '').toUpperCase()}`;
-  if (schemaData.cookTime) jsonLd.cookTime = `PT${schemaData.cookTime.replace(/\s+/g, '').toUpperCase()}`;
-  if (schemaData.totalTime) jsonLd.totalTime = `PT${schemaData.totalTime.replace(/\s+/g, '').toUpperCase()}`;
-  if (schemaData.servings) jsonLd.recipeYield = schemaData.servings;
-  if (schemaData.cuisine) jsonLd.recipeCuisine = schemaData.cuisine;
-  if (schemaData.category) jsonLd.recipeCategory = schemaData.category;
-  if (schemaData.ingredients) jsonLd.recipeIngredient = schemaData.ingredients;
+  if (schemaData.prepTime) jsonLd[0].prepTime = `PT${schemaData.prepTime.replace(/\s+/g, '').toUpperCase()}`;
+  if (schemaData.cookTime) jsonLd[0].cookTime = `PT${schemaData.cookTime.replace(/\s+/g, '').toUpperCase()}`;
+  if (schemaData.totalTime) jsonLd[0].totalTime = `PT${schemaData.totalTime.replace(/\s+/g, '').toUpperCase()}`;
+  if (schemaData.servings) jsonLd[0].recipeYield = schemaData.servings;
+  if (schemaData.cuisine) jsonLd[0].recipeCuisine = schemaData.cuisine;
+  if (schemaData.category) jsonLd[0].recipeCategory = schemaData.category;
+  if (schemaData.ingredients) jsonLd[0].recipeIngredient = schemaData.ingredients;
   if (schemaData.instructions) {
-    jsonLd.recipeInstructions = Array.isArray(schemaData.instructions)
+    jsonLd[0].recipeInstructions = Array.isArray(schemaData.instructions)
       ? schemaData.instructions.map((step: string, i: number) => ({
           '@type': 'HowToStep',
           position: i + 1,
@@ -95,9 +170,9 @@ if (schemaType === 'Recipe' && schemaData) {
   }
 } else if (schemaType === 'HowTo' && schemaData) {
   // HowTo-specific fields
-  if (schemaData.totalTime) jsonLd.totalTime = `PT${schemaData.totalTime.replace(/\s+/g, '').toUpperCase()}`;
+  if (schemaData.totalTime) jsonLd[0].totalTime = `PT${schemaData.totalTime.replace(/\s+/g, '').toUpperCase()}`;
   if (schemaData.steps) {
-    jsonLd.step = schemaData.steps.map((step: string, i: number) => ({
+    jsonLd[0].step = schemaData.steps.map((step: string, i: number) => ({
       '@type': 'HowToStep',
       position: i + 1,
       text: step,
@@ -106,7 +181,7 @@ if (schemaType === 'Recipe' && schemaData) {
 } else if (schemaType === 'FAQ' && schemaData) {
   // FAQ-specific fields
   if (schemaData.questions) {
-    jsonLd.mainEntity = schemaData.questions.map((q: { question: string; answer: string }) => ({
+    jsonLd[0].mainEntity = schemaData.questions.map((q: { question: string; answer: string }) => ({
       '@type': 'Question',
       name: q.question,
       acceptedAnswer: {
@@ -117,9 +192,9 @@ if (schemaType === 'Recipe' && schemaData) {
   }
 } else if (schemaType === 'Product' && schemaData) {
   // Product-specific fields
-  if (schemaData.brand) jsonLd.brand = { '@type': 'Brand', name: schemaData.brand };
+  if (schemaData.brand) jsonLd[0].brand = { '@type': 'Brand', name: schemaData.brand };
   if (schemaData.price) {
-    jsonLd.offers = {
+    jsonLd[0].offers = {
       '@type': 'Offer',
       price: schemaData.price,
       priceCurrency: schemaData.currency || 'USD',
@@ -128,10 +203,10 @@ if (schemaType === 'Recipe' && schemaData) {
   }
 } else if (schemaType === 'Event' && schemaData) {
   // Event-specific fields
-  if (schemaData.startDate) jsonLd.startDate = schemaData.startDate;
-  if (schemaData.endDate) jsonLd.endDate = schemaData.endDate;
+  if (schemaData.startDate) jsonLd[0].startDate = schemaData.startDate;
+  if (schemaData.endDate) jsonLd[0].endDate = schemaData.endDate;
   if (schemaData.location) {
-    jsonLd.location = {
+    jsonLd[0].location = {
       '@type': 'Place',
       name: schemaData.location,
       address: schemaData.address,
@@ -143,13 +218,14 @@ if (schemaType === 'Recipe' && schemaData) {
 <!doctype html>
 <html lang="en">
   <head>
+    <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"}>
     <SEOHead
       title={`${frontmatter.title} – ${SITE.name}`}
       description={frontmatter.description}
       image={socialImage}
       type="article"
-      publishedTime={frontmatter.pubDate?.toISOString?.()}
-      modifiedTime={frontmatter.updatedDate?.toISOString?.()}
+      publishedTime={pubDate?.toISOString()}
+      modifiedTime={updatedDate?.toISOString()}
       canonicalUrl={frontmatter.canonicalUrl}
       jsonLd={jsonLd}
     />
@@ -165,6 +241,16 @@ if (schemaType === 'Recipe' && schemaData) {
         data-ps="src/layouts/BlogLayout.astro:xkhs7u">
         
         <header class="mb-12" data-ps="src/layouts/BlogLayout.astro:fqly23">
+          <nav class="flex items-center gap-2 text-xs font-medium text-gray-500 mb-8 overflow-x-auto whitespace-nowrap scrollbar-hide" aria-label="Breadcrumb" data-ps="src/layouts/BlogLayout.astro:breadcrumb">
+            <a href="/" class="hover:text-[#dc2626] transition-colors" data-ps="src/layouts/BlogLayout.astro:su3wl9">Home</a>
+            <span class="text-gray-600" data-ps="src/layouts/BlogLayout.astro:dfgz5f">›</span>
+            <a href="/blog/" class="hover:text-[#dc2626] transition-colors" data-ps="src/layouts/BlogLayout.astro:su3wl8">Blog</a>
+            <span class="text-gray-600" data-ps="src/layouts/BlogLayout.astro:dfgz5e">›</span>
+            <span class="text-gray-900 truncate" data-ps="src/layouts/BlogLayout.astro:dfgz5d">
+              {frontmatter.title.length > 50 ? frontmatter.title.substring(0, 50) + '...' : frontmatter.title}
+            </span>
+          </nav>
+
           <div class="flex items-center gap-3 mb-6 text-sm font-bold uppercase tracking-widest text-cyan-700" data-ps="src/layouts/BlogLayout.astro:category-badge">
             {frontmatter.category}
           </div>
@@ -187,9 +273,9 @@ if (schemaType === 'Recipe' && schemaData) {
               </span>
               <div class="flex flex-col" data-ps="src/layouts/BlogLayout.astro:author-info">
                 <span class="text-black font-black text-base" data-ps="src/layouts/BlogLayout.astro:author-name">Asianfoodsdaily</span>
-                {frontmatter.pubDate && (
-                  <time datetime={frontmatter.pubDate.toISOString()} class="text-xs text-gray-600 uppercase font-bold tracking-tight">
-                    {frontmatter.pubDate.toLocaleDateString('en-US', {
+                {pubDate && (
+                  <time datetime={pubDate.toISOString()} class="text-xs text-gray-600 uppercase font-bold tracking-tight">
+                    {pubDate.toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric'
@@ -211,10 +297,39 @@ if (schemaType === 'Recipe' && schemaData) {
           <slot />
         </div>
 
+        <script>
+          // Fix external links that are missing protocol
+          document.addEventListener('DOMContentLoaded', () => {
+            const articleContent = document.querySelector('.recipe-content');
+            if (!articleContent) return;
+
+            const links = articleContent.querySelectorAll('a');
+            links.forEach(link => {
+              const href = link.getAttribute('href');
+              if (!href) return;
+
+              // Check if it's an external-looking link but treated as relative
+              // e.g. "www.google.com" or "google.com" but not starting with / or # or http
+              if (!href.startsWith('/') && !href.startsWith('#') && !href.startsWith('http') && !href.startsWith('mailto:')) {
+                // It's likely a domain without protocol
+                link.setAttribute('href', 'https://' + href);
+                link.setAttribute('target', '_blank');
+                link.setAttribute('rel', 'noopener noreferrer');
+              }
+              
+              // Also catch links that are already http/https but missing target=_blank
+              if (href.startsWith('http') && !href.includes(window.location.hostname)) {
+                link.setAttribute('target', '_blank');
+                link.setAttribute('rel', 'noopener noreferrer');
+              }
+            });
+          });
+        </script>
+
         {frontmatter.tags && frontmatter.tags.length > 0 && (
           <footer class="mt-16 pt-10 border-t border-gray-100" data-ps="src/layouts/BlogLayout.astro:fydg8a">
             <div class="flex flex-wrap gap-2" data-ps="src/layouts/BlogLayout.astro:dfgz5m-container">
-              {frontmatter.tags.map((tag) => (
+              {frontmatter.tags.map((tag: any) => (
                 <span class="bg-gray-50 text-gray-600 px-4 py-1.5 rounded-full text-sm font-medium hover:bg-cyan-900 hover:text-cyan-50 transition-all cursor-default" data-ps="src/layouts/BlogLayout.astro:dfgz5m">
                   #{tag}
                 </span>

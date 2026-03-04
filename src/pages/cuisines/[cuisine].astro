@@ -40,49 +40,48 @@ const jsonLd = {
 ---
 
 <BaseLayout title={`${name} Cuisine`} description={`Discover authentic ${name} recipes, from classic favorites to modern twists.`} jsonLd={jsonLd}>
-  <main class="pt-32 pb-24">
-    <div class="container mx-auto px-4">
-      <div class="max-w-4xl mx-auto text-center mb-20">
-        <h1 class="text-5xl md:text-7xl font-black text-zinc-900 mb-6 tracking-tighter uppercase italic">
-          {name} <span class="text-red-600">Cuisine</span>
+  <main class="pt-32 pb-24" data-ps="src/pages/cuisines/[cuisine].astro:6vcqpm">
+    <div class="container mx-auto px-4" data-ps="src/pages/cuisines/[cuisine].astro:b10a0j">
+      <div class="max-w-4xl mx-auto text-center mb-20" data-ps="src/pages/cuisines/[cuisine].astro:b10a0k">
+        <h1 class="text-5xl md:text-7xl font-black text-zinc-900 mb-6 tracking-tighter uppercase italic" data-ps="src/pages/cuisines/[cuisine].astro:vgyyj5">
+          {name} <span class="text-red-600" data-ps="src/pages/cuisines/[cuisine].astro:rpamgg">Cuisine</span>
         </h1>
-        <p class="text-xl text-zinc-600 leading-relaxed">
+        <p class="text-xl text-zinc-600 leading-relaxed" data-ps="src/pages/cuisines/[cuisine].astro:h3gcun">
           Master the art of {name} cooking with our curated collection of authentic recipes.
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+      <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-10" data-ps="src/pages/cuisines/[cuisine].astro:b10a0l">
         {sortedRecipes.map((recipe) => (
-          <a href={`/recipes/${recipe.slug}`} class="group flex flex-col bg-white rounded-3xl overflow-hidden border border-zinc-100 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-            <div class="relative aspect-video overflow-hidden">
+          <a href={`/recipes/${recipe.slug}`} class="group flex flex-col bg-white rounded-xl md:rounded-3xl overflow-hidden border border-zinc-100 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2" data-ps="src/pages/cuisines/[cuisine].astro:9zig5m">
+            <div class="relative aspect-square md:aspect-video overflow-hidden" data-ps="src/pages/cuisines/[cuisine].astro:b10a0m">
               <img
                 src={recipe.data.image}
                 alt={recipe.data.title}
-                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                <span class="text-white font-bold flex items-center gap-2">
+                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-ps="src/pages/cuisines/[cuisine].astro:iu8omr" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6" data-ps="src/pages/cuisines/[cuisine].astro:b10a0n">
+                <span class="text-white font-bold flex items-center gap-2" data-ps="src/pages/cuisines/[cuisine].astro:rpamh2">
                   Read Recipe
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
                 </span>
               </div>
             </div>
-            <div class="p-8">
-              <span class="inline-block px-4 py-1.5 bg-red-50 text-red-600 text-xs font-black uppercase tracking-widest rounded-full mb-4">
+            <div class="p-3 md:p-8" data-ps="src/pages/cuisines/[cuisine].astro:b10a0o">
+              <span class="inline-block px-2 py-0.5 md:px-4 md:py-1.5 bg-red-50 text-red-600 text-[9px] md:text-xs font-black uppercase tracking-widest rounded-full mb-1.5 md:mb-4" data-ps="src/pages/cuisines/[cuisine].astro:rpamh3">
                 {name}
               </span>
-              <h3 class="text-2xl font-black text-zinc-900 leading-tight group-hover:text-red-600 transition-colors mb-4 italic">
+              <h3 class="text-sm md:text-2xl font-black text-zinc-900 leading-tight group-hover:text-red-600 transition-colors mb-2 md:mb-4 italic line-clamp-2 md:line-clamp-none" data-ps="src/pages/cuisines/[cuisine].astro:a7b90u">
                 {recipe.data.title}
               </h3>
-              <p class="text-zinc-500 line-clamp-2 leading-relaxed mb-6">
+              <p class="hidden md:block text-zinc-500 line-clamp-2 leading-relaxed mb-6" data-ps="src/pages/cuisines/[cuisine].astro:h3gcum">
                 {recipe.data.description}
               </p>
-              <div class="flex items-center justify-between gap-3 mt-auto pt-6 border-t border-zinc-50">
-                <span class="text-sm font-bold text-red-600 uppercase tracking-widest flex items-center gap-2 group-hover:gap-3 transition-all">
-                  View recipe
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+              <div class="flex items-center justify-between gap-3 mt-auto pt-4 md:pt-6 border-t border-zinc-50" data-ps="src/pages/cuisines/[cuisine].astro:b10a0p">
+                <span class="text-[10px] md:text-sm font-bold text-red-600 uppercase tracking-widest flex items-center gap-1 md:gap-2 group-hover:gap-3 transition-all" data-ps="src/pages/cuisines/[cuisine].astro:rpamh4">
+                  View <span class="hidden sm:inline" data-ps="src/pages/cuisines/[cuisine].astro:rpamh5">recipe</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="md:w-4 md:h-4"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
                 </span>
-                <span class="text-sm font-bold text-zinc-400 uppercase tracking-wider">{recipe.data.pubDate?.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                <span class="text-[10px] md:text-sm font-bold text-zinc-400 uppercase tracking-wider" data-ps="src/pages/cuisines/[cuisine].astro:rpamh6">{recipe.data.pubDate?.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
               </div>
             </div>
           </a>
@@ -90,9 +89,9 @@ const jsonLd = {
       </div>
 
       {sortedRecipes.length === 0 && (
-        <div class="text-center py-32 bg-zinc-50 rounded-3xl border-2 border-dashed border-zinc-200">
-          <p class="text-2xl font-bold text-zinc-400 italic">No {name} recipes found yet. Check back soon!</p>
-          <a href="/recipes" class="mt-8 inline-flex items-center gap-2 text-red-600 font-black uppercase tracking-widest hover:gap-4 transition-all">
+        <div class="text-center py-32 bg-zinc-50 rounded-3xl border-2 border-dashed border-zinc-200" data-ps="src/pages/cuisines/[cuisine].astro:b10a0q">
+          <p class="text-2xl font-bold text-zinc-400 italic" data-ps="src/pages/cuisines/[cuisine].astro:h3gcul">No {name} recipes found yet. Check back soon!</p>
+          <a href="/recipes" class="mt-8 inline-flex items-center gap-2 text-red-600 font-black uppercase tracking-widest hover:gap-4 transition-all" data-ps="src/pages/cuisines/[cuisine].astro:9zig5l">
             Browse all recipes
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
           </a>

@@ -28,11 +28,14 @@ const docsBySection = sortedDocs.reduce((acc, doc) => {
   acc[section].push(doc);
   return acc;
 }, {} as Record<string, typeof sortedDocs>);
+
+const noindex = frontmatter.noindex || false;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
+    <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"}>
     <SEOHead
       title={`${frontmatter.title} – ${SITE.name}`}
       description={frontmatter.description}

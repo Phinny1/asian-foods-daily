@@ -18,7 +18,7 @@ const tocHeadings = headings.filter(h => h.depth >= 2 && h.depth <= 3);
 
 {tocHeadings.length > 2 && (
   <nav class="toc not-prose mb-8 rounded-xl border border-gray-100 bg-gray-50 p-6" data-ps="src/components/TableOfContents.astro:nav">
-    <h2 class="mb-4 text-lg font-black text-zinc-900" data-ps="src/components/TableOfContents.astro:title">{title}</h2>
+    <p class="mb-4 text-lg font-black text-zinc-900" data-ps="src/components/TableOfContents.astro:title">{title}</p>
     <ul class="space-y-2 text-sm" data-ps="src/components/TableOfContents.astro:list">
       {tocHeadings.map((heading) => (
         <li class={heading.depth === 3 ? 'ml-4' : ''} data-ps="src/components/TableOfContents.astro:item">

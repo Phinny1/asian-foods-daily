@@ -30,7 +30,7 @@ function getEntry(slug: string) {
 }
 
 const weeknightDinners = [
-  { slug: 'chicken-noodle-stir-fry-your-new-weeknight-hero', time: '20 Mins' },
+  { slug: 'japanese-yakisoba-stir-fry-noodles', time: '20 Mins' },
   { slug: 'easy-30-minute-asian-chicken-meatballs', time: '30 Mins' },
   { slug: 'easy-homemade-chicken-satay', time: '25 Mins' },
   { slug: 'easy-ginger-scallion-noodles-recipe', time: '15 Mins' },
@@ -45,7 +45,7 @@ const chineseTakeout = [
 
 const stirFry = [
   'easy-pepper-steak-stir-fry-recipe',
-  'chicken-noodle-stir-fry-your-new-weeknight-hero',
+  'how-to-make-epic-chinese-beef-stir-fry-at-home',
   'chinese-tomato-egg-stir-fry',
   'easy-chinese-cabbage-stir-fry-recipe',
 ];
@@ -60,7 +60,7 @@ const noodlesRice = [
 const soupsStews = [
   'how-to-make-the-best-cantonese-congee-ever',
   'regional-variations-of-ramen-across-asia',
-  'is-pad-kra-pao-really-thailands-ultimate-street-food',
+  'kimchi-soup-recipe',
   'how-to-make-kimchi-jjigae-kimchi-stew',
 ];
 
@@ -68,97 +68,65 @@ const dimSum = [
   'how-to-make-perfect-soup-dumplings-xiaolongbao-at-home',
   'how-to-make-pork-and-shrimp-siu-mai',
   'how-to-make-pork-dumplings-at-home',
-  'quick-chicken-buns-recipe',
+];
+
+const healthyRecipes = [
+  'crunchy-asian-cucumber-salad',
+  'thai-cucumber-shrimp-salad',
+  'quick-and-healthy-bok-choy-mushroom-stir-fry-recipe',
+  'how-to-make-a-nutritious-tuna-poke-bowl',
 ];
 
 const arrowIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`;
 ---
 
 <BaseLayout 
-  title="Asian Foods Daily | Authentic Asian Recipes"
+  title="Authentic Asian Recipes & Cooking Guides | Asian Foods Daily"
   description="Discover authentic Asian food recipes, step-by-step cooking guides, and delicious ideas for appetizers, noodles, soups, desserts & more."
   jsonLd={{
     "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://www.asianfoodsdaily.com/#organization",
-        "name": "Asian Foods Daily",
-        "url": "https://www.asianfoodsdaily.com/",
-        "logo": {
-          "@type": "ImageObject",
-          "@id": "https://www.asianfoodsdaily.com/#logo",
-          "url": "https://www.asianfoodsdaily.com/logo.png",
-          "width": 512,
-          "height": 512
-        },
-        "sameAs": [
-          "https://www.facebook.com/",
-          "https://www.instagram.com/",
-          "https://www.pinterest.com/"
-        ]
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://www.asianfoodsdaily.com/#website",
-        "url": "https://www.asianfoodsdaily.com/",
-        "name": "Asian Foods Daily",
-        "publisher": {
-          "@id": "https://www.asianfoodsdaily.com/#organization"
-        },
-        "inLanguage": "en-US",
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": {
-            "@type": "EntryPoint",
-            "urlTemplate": "https://www.asianfoodsdaily.com/?s={search_term_string}"
-          },
-          "query-input": "required name=search_term_string"
-        }
-      },
-      {
-        "@type": "WebPage",
-        "@id": "https://www.asianfoodsdaily.com/#homepage",
-        "url": "https://www.asianfoodsdaily.com/",
-        "name": "Asian Foods Daily – Asian Recipes Made Simple",
-        "description": "Asian Foods Daily brings you easy, authentic Asian recipes from across the continent — Thai, Chinese, Japanese, Korean, Vietnamese, Filipino, and more.",
-        "isPartOf": {
-          "@id": "https://www.asianfoodsdaily.com/#website"
-        },
-        "about": {
-          "@id": "https://www.asianfoodsdaily.com/#organization"
-        },
-        "primaryImageOfPage": {
-          "@id": "https://www.asianfoodsdaily.com/#logo"
-        },
-        "inLanguage": "en-US"
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": "https://www.asianfoodsdaily.com/#breadcrumb",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://www.asianfoodsdaily.com/"
-          }
-        ]
-      }
+    "@type": "WebSite",
+    "name": "Asian Foods Daily",
+    "url": "https://www.asianfoodsdaily.com/",
+    "sameAs": [
+      "https://www.facebook.com/Asianfoodsdaily",
+      "https://www.instagram.com/asianfoodsdaily/",
+      "https://www.pinterest.com/asianfoodsdaily/"
     ]
   }}
->
+  ogType="website"
+  noIndex={false}>
   <Hero />
-  <FeaturedRecipes />
-  <CategoryGrid />
 
-  <section class="py-20 bg-zinc-50" data-ps="src/pages/index.astro:weeknight-dinners">
+  <section class="py-10 bg-white" data-ps="src/pages/index.astro:intro-section">
+    <div class="container mx-auto px-4 text-center" data-ps="src/pages/index.astro:intro-container">
+      <div class="max-w-4xl mx-auto" data-ps="src/pages/index.astro:intro-content">
+        <p class="text-3xl md:text-4xl font-bold text-zinc-900 mb-8 leading-tight" data-ps="src/pages/index.astro:intro-title">
+          <span class="text-red-600" data-ps="src/pages/index.astro:303ib7">Asian Foods Daily</span> is your home for easy, authentic Asian recipes drawn from across the continent.
+        </p>
+        <div class="space-y-6 text-lg md:text-xl text-zinc-600 leading-relaxed" data-ps="src/pages/index.astro:intro-text">
+          <p data-ps="src/pages/index.astro:tff0ko">
+            Whether you're exploring Chinese stir-fries, Japanese ramen, Korean BBQ, or Thai curries, every recipe comes with clear step-by-step guides designed for home cooks of all skill levels.
+          </p>
+          <p class="text-zinc-900" data-ps="src/pages/index.astro:tff0kp">From quick 30-minute weeknight dinners to traditional dishes worth the extra effort — you'll find it all here across 200+ recipes and 50+ cuisines.</p>
+        </div>
+        <div class="mt-12 flex justify-center" data-ps="src/pages/index.astro:intro-divider">
+          <div class="h-1.5 w-24 bg-red-600 rounded-full" data-ps="src/pages/index.astro:2b7xns"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CategoryGrid />
+  <FeaturedRecipes />
+
+  <section class="py-10 bg-zinc-50" data-ps="src/pages/index.astro:weeknight-dinners">
     <div class="container mx-auto px-4" data-ps="src/pages/index.astro:dinners-container">
       <div class="flex items-end justify-between mb-16 gap-6" data-ps="src/pages/index.astro:dinners-header">
         <div data-ps="src/pages/index.astro:dinners-titles">
           <h2 class="text-4xl font-bold text-zinc-900" data-ps="src/pages/index.astro:dinners-title">Easy Weeknight Dinners</h2>
         </div>
-        <a href="/recipes/" class="inline-flex items-center gap-2 text-red-600 font-bold hover:gap-3 transition-all shrink-0" data-ps="src/pages/index.astro:dinners-more">
+        <a href="/category/easy-weeknight-dinners/" class="inline-flex items-center gap-2 text-red-600 font-bold hover:gap-3 transition-all shrink-0" data-ps="src/pages/index.astro:dinners-more">
           View all recipes
           <Fragment set:html={arrowIcon} />
         </a>
@@ -167,18 +135,25 @@ const arrowIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20
         {weeknightDinners.map((item, i) => {
           const recipe = getEntry(item.slug);
           if (!recipe) return null;
+          
+          let altText = recipe.title;
+          if (item.slug === 'japanese-yakisoba-stir-fry-noodles') altText += ' - Easy Japanese Noodle Recipe';
+          else if (item.slug === 'easy-30-minute-asian-chicken-meatballs') altText += ' - Asian Fusion Meatball Recipe';
+          else if (item.slug === 'easy-homemade-chicken-satay') altText += ' - Thai Grilled Chicken Recipe';
+          else if (item.slug === 'easy-ginger-scallion-noodles-recipe') altText += ' - Cantonese Style Noodle Recipe';
+
           return (
             <a href={recipe.href} class="group block bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-zinc-100" data-ps={`src/pages/index.astro:dinner-${i + 1}`}>
-              <div class="aspect-[4/3] overflow-hidden">
+              <div class="aspect-[4/3] overflow-hidden" data-ps="src/pages/index.astro:2b7xnm">
                 <img
                   src={recipe.image}
-                  alt={recipe.title}
+                  alt={altText}
                   class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  loading="lazy" />
+                  loading="lazy" data-ps="src/pages/index.astro:rk10zo" />
               </div>
-              <div class="p-4 md:p-8">
-                <span class="inline-block px-3 py-1 bg-red-100 text-red-700 text-[10px] md:text-xs font-bold rounded-full mb-2 md:mb-4 uppercase tracking-wider">{item.time}</span>
-                <h3 class="text-lg md:text-2xl font-bold text-zinc-900 group-hover:text-red-700 transition-colors line-clamp-2">{recipe.title}</h3>
+              <div class="p-4 md:p-8" data-ps="src/pages/index.astro:2b7xnn">
+                <span class="inline-block px-3 py-1 bg-red-100 text-red-700 text-[10px] md:text-xs font-bold rounded-full mb-2 md:mb-4 uppercase tracking-wider" data-ps="src/pages/index.astro:m1wpnl">{item.time}</span>
+                <h3 class="text-lg md:text-2xl font-bold text-zinc-900 group-hover:text-red-700 transition-colors line-clamp-2" data-ps="src/pages/index.astro:647zy8">{recipe.title}</h3>
               </div>
             </a>
           );
@@ -188,36 +163,63 @@ const arrowIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20
   </section>
 
   {[
-    { title: 'Chinese Takeout at Home', slugs: chineseTakeout, bg: 'bg-white', cardBg: 'bg-zinc-50', id: 'most-popular' },
-    { title: 'Stir-Fry Recipes', slugs: stirFry, bg: 'bg-zinc-50', cardBg: 'bg-white', id: 'stir-fry-section' },
-    { title: 'Noodles & Rice Bowls', slugs: noodlesRice, bg: 'bg-white border-b border-zinc-100', cardBg: 'bg-zinc-50', id: 'noodles-rice-section' },
-    { title: 'Asian Soups & Stews', slugs: soupsStews, bg: 'bg-zinc-50 border-b border-zinc-100', cardBg: 'bg-white', id: 'soups-stews-section' },
-    { title: 'Dim Sum & Dumplings', slugs: dimSum, bg: 'bg-white', cardBg: 'bg-zinc-50', id: 'dim-sum-section' },
+    { title: 'Chinese Takeout at Home', slugs: chineseTakeout, bg: 'bg-white', cardBg: 'bg-zinc-50', id: 'most-popular', link: '/category/chinese-takeout-at-home/' },
+    { title: 'Stir-Fry Recipes', slugs: stirFry, bg: 'bg-zinc-50', cardBg: 'bg-white', id: 'stir-fry-section', link: '/category/stir-fry-recipes/' },
+    { title: 'Noodles & Rice Bowls', slugs: noodlesRice, bg: 'bg-white border-b border-zinc-100', cardBg: 'bg-zinc-50', id: 'noodles-rice-section', link: '/category/noodles-and-rice-bowls/' },
+    { title: 'Asian Soups & Stews', slugs: soupsStews, bg: 'bg-zinc-50 border-b border-zinc-100', cardBg: 'bg-white', id: 'soups-stews-section', link: '/category/asian-soups-and-stews/' },
+    { title: 'Dim Sum & Dumplings', slugs: dimSum, bg: 'bg-white', cardBg: 'bg-zinc-50', id: 'dim-sum-section', link: '/category/dim-sum-and-dumplings/' },
+    { title: 'Healthy Asian Recipes', slugs: healthyRecipes, bg: 'bg-zinc-50 border-t border-zinc-100', cardBg: 'bg-white', id: 'healthy-recipes-section', link: '/category/healthy-asian-recipes/' },
   ].map((section) => (
-    <section class={`py-20 ${section.bg}`} data-ps={`src/pages/index.astro:${section.id}`}>
-      <div class="container mx-auto px-4">
-        <div class="flex items-end justify-between mb-16 gap-6">
-          <h2 class="text-4xl font-bold text-zinc-900">{section.title}</h2>
-          <a href="/recipes/" class="inline-flex items-center gap-2 text-red-600 font-bold hover:gap-3 transition-all shrink-0">
+    <section class={`py-10 ${section.bg}`} data-ps={`src/pages/index.astro:${section.id}`}>
+      <div class="container mx-auto px-4" data-ps="src/pages/index.astro:2b7xno">
+        <div class="flex items-end justify-between mb-16 gap-6" data-ps="src/pages/index.astro:2b7xnp">
+          <h2 class="text-4xl font-bold text-zinc-900" data-ps="src/pages/index.astro:frgy7t">{section.title}</h2>
+          <a href={section.link} class="inline-flex items-center gap-2 text-red-600 font-bold hover:gap-3 transition-all shrink-0" data-ps="src/pages/index.astro:40lb6j">
             View all recipes
             <Fragment set:html={arrowIcon} />
           </a>
         </div>
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8" data-ps="src/pages/index.astro:2b7xnq">
           {section.slugs.map((slug, i) => {
             const recipe = getEntry(slug);
             if (!recipe) return null;
+            
+            let altText = recipe.title;
+            if (slug === 'chinese-eggplant-with-garlic-sauce') altText += ' - Sichuan Style Stir Fry Recipe';
+            else if (slug === 'bang-bang-chicken-skewers-recipe') altText += ' - Chinese Inspired Chicken Recipe';
+            else if (slug === 'chicken-and-broccoli-chinese-takeout-style') altText += ' - Classic Chinese Takeout Recipe';
+            else if (slug === 'best-spicy-edamame-recipe') altText += ' - Japanese Style Appetizer Recipe';
+            else if (slug === 'easy-pepper-steak-stir-fry-recipe') altText += ' - Chinese Style Beef Stir Fry Recipe';
+            else if (slug === 'how-to-make-epic-chinese-beef-stir-fry-at-home') altText += ' - Authentic Chinese Beef Recipe';
+            else if (slug === 'chinese-tomato-egg-stir-fry') altText += ' - Traditional Chinese Home Cooking Recipe';
+            else if (slug === 'easy-chinese-cabbage-stir-fry-recipe') altText += ' - Quick Chinese Vegetable Stir Fry Recipe';
+            else if (slug === 'how-to-make-chicken-pad-thai-like-thai-street-vendors') altText += ' - Authentic Thai Noodle Recipe';
+            else if (slug === 'best-korean-beef-bulgogi-recipe') altText += ' - Traditional Korean BBQ Recipe';
+            else if (slug === 'chicken-katsu-curry-udon') altText += ' - Japanese Comfort Food Recipe';
+            else if (slug === 'how-to-make-authentic-vietnamese-pho-at-home') altText += ' - Traditional Vietnamese Soup Recipe';
+            else if (slug === 'how-to-make-the-best-cantonese-congee-ever') altText += ' - Classic Chinese Breakfast Recipe';
+            else if (slug === 'regional-variations-of-ramen-across-asia') altText += ' - Diverse Japanese Ramen Recipe Guide';
+            else if (slug === 'kimchi-soup-recipe') altText += ' - Healthy Korean Stew Recipe';
+            else if (slug === 'how-to-make-kimchi-jjigae-kimchi-stew') altText += ' - Authentic Korean Kimchi Stew Recipe';
+            else if (slug === 'how-to-make-perfect-soup-dumplings-xiaolongbao-at-home') altText += ' - Skilled Chinese Dim Sum Recipe';
+            else if (slug === 'how-to-make-pork-and-shrimp-siu-mai') altText += ' - Classic Cantonese Dim Sum Recipe';
+            else if (slug === 'how-to-make-pork-dumplings-at-home') altText += ' - Homemade Chinese Dumpling Recipe';
+            else if (slug === 'crunchy-asian-cucumber-salad') altText += ' - Refreshing Asian Style Salad Recipe';
+            else if (slug === 'thai-cucumber-shrimp-salad') altText += ' - Zesty Thai Seafood Salad Recipe';
+            else if (slug === 'quick-and-healthy-bok-choy-mushroom-stir-fry-recipe') altText += ' - Low Carb Chinese Vegetable Recipe';
+            else if (slug === 'how-to-make-a-nutritious-tuna-poke-bowl') altText += ' - Fresh Hawaiian Japanese Fusion Recipe';
+
             return (
-              <a href={recipe.href} class={`group block overflow-hidden rounded-2xl ${section.cardBg} border border-zinc-100 transition-all hover:shadow-xl hover:-translate-y-1`}>
-                <div class="aspect-square overflow-hidden">
+              <a href={recipe.href} class={`group block overflow-hidden rounded-2xl ${section.cardBg} border border-zinc-100 transition-all hover:shadow-xl hover:-translate-y-1`} data-ps="src/pages/index.astro:40lb6i">
+                <div class="aspect-square overflow-hidden" data-ps="src/pages/index.astro:2b7xnr">
                   <img
                     src={recipe.image}
-                    alt={recipe.title}
+                    alt={altText}
                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    loading="lazy" />
+                    loading="lazy" data-ps="src/pages/index.astro:rk10zn" />
                 </div>
-                <div class="p-4 md:p-6">
-                  <h3 class="text-base md:text-xl font-bold text-zinc-900 leading-tight line-clamp-2">{recipe.title}</h3>
+                <div class="p-4 md:p-6" data-ps="src/pages/index.astro:2b7xns">
+                  <h3 class="text-base md:text-xl font-bold text-zinc-900 leading-tight line-clamp-2" data-ps="src/pages/index.astro:647zy7">{recipe.title}</h3>
                 </div>
               </a>
             );
@@ -227,9 +229,53 @@ const arrowIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20
     </section>
   ))}
   
-  <section class="py-24 bg-red-600 text-white" data-ps="src/pages/index.astro:g2l9bz">
+  <section class="py-10 bg-white" data-ps="src/pages/index.astro:blog-section">
+    <div class="container mx-auto px-4" data-ps="src/pages/index.astro:blog-container">
+      <div class="flex items-end justify-between mb-12 gap-6" data-ps="src/pages/index.astro:blog-header">
+        <div data-ps="src/pages/index.astro:blog-titles">
+          <h2 class="text-4xl font-bold text-zinc-900" data-ps="src/pages/index.astro:blog-title">From the Blog</h2>
+          <p class="text-zinc-600 mt-2 text-lg" data-ps="src/pages/index.astro:blog-subtitle">Stories, techniques, and culinary adventures</p>
+        </div>
+        <a href="/blog/" class="inline-flex items-center gap-2 text-red-600 font-bold hover:gap-3 transition-all shrink-0" data-ps="src/pages/index.astro:blog-more">
+          Read more posts
+          <Fragment set:html={arrowIcon} />
+        </a>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8" data-ps="src/pages/index.astro:blog-grid">
+        {blogPosts
+          .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime())
+          .slice(0, 3)
+          .map((post, i) => (
+            <article class="group flex flex-col h-full bg-zinc-50 rounded-2xl overflow-hidden border border-zinc-100 hover:shadow-xl transition-all duration-300" data-ps={`src/pages/index.astro:blog-post-${i}`}>
+              <a href={`/blog/${post.slug}/`} class="block aspect-[16/10] overflow-hidden" data-ps="src/pages/index.astro:blog-image-link">
+                <img 
+                  src={post.data.image} 
+                  alt={post.data.title}
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy" data-ps="src/pages/index.astro:rk10zg" />
+              </a>
+              <div class="p-6 flex flex-col flex-grow" data-ps="src/pages/index.astro:blog-content">
+                <h3 class="text-xl font-bold text-zinc-900 mb-3 group-hover:text-red-600 transition-colors line-clamp-2" data-ps="src/pages/index.astro:blog-post-title">
+                  <a href={`/blog/${post.slug}/`} data-ps="src/pages/index.astro:tno8lj">{post.data.title}</a>
+                </h3>
+                <p class="text-zinc-600 text-sm mb-6 line-clamp-3 flex-grow" data-ps="src/pages/index.astro:blog-post-desc">
+                  {post.data.description}
+                </p>
+                <a href={`/blog/${post.slug}/`} class="text-red-600 font-bold text-sm inline-flex items-center gap-1 hover:gap-2 transition-all" data-ps="src/pages/index.astro:blog-read-more">
+                  Read More
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg>
+                </a>
+              </div>
+            </article>
+          ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-10 bg-red-600 text-white" data-ps="src/pages/index.astro:g2l9bz">
     <div class="container mx-auto px-4 text-center" data-ps="src/pages/index.astro:2b7xns">
-      <h2 class="text-4xl font-bold mb-8" data-ps="src/pages/index.astro:frgy7m">Join Our Cooking Community</h2>
+      <p class="text-4xl font-bold mb-8" data-ps="src/pages/index.astro:frgy7m">Join Our Cooking Community</p>
       <p class="text-white text-xl max-w-2xl mx-auto mb-12" data-ps="src/pages/index.astro:tff0kn">Get the latest recipes and cooking tips delivered straight to your inbox every week.</p>
       <form action="/subscribe/" method="POST" class="max-w-md mx-auto flex flex-col sm:flex-row gap-4">
         <input 

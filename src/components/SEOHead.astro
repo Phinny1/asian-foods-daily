@@ -72,6 +72,16 @@ const twitterHandle = (SITE as any).twitterHandle || '';
 <!-- Page Title -->
 <title>{title}</title>
 
+<!-- Pinterest Save Button -->
+<script
+  is:inline
+  async
+  defer
+  data-pin-hover="true"
+  data-pin-tall="true"
+  src="//assets.pinterest.com/js/pinit.js"
+></script>
+
 <!-- Structured Data / JSON-LD -->
 {jsonLd && (
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

@@ -35,10 +35,10 @@ const jsonLd = {
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" data-ps="src/pages/cuisines/indian.astro:8buku6">
+      <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-10" data-ps="src/pages/cuisines/indian.astro:8buku6">
         {sortedRecipes.map((recipe) => (
-          <a href={`/recipes/${recipe.slug}/`} class="group flex flex-col bg-white rounded-3xl overflow-hidden border border-zinc-100 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2" data-ps="src/pages/cuisines/indian.astro:3n153i">
-            <div class="relative aspect-video overflow-hidden" data-ps="src/pages/cuisines/indian.astro:8buku7">
+          <a href={`/recipes/${recipe.slug}/`} class="group flex flex-col bg-white rounded-2xl md:rounded-3xl overflow-hidden border border-zinc-100 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2" data-ps="src/pages/cuisines/indian.astro:3n153i">
+            <div class="relative aspect-square md:aspect-video overflow-hidden" data-ps="src/pages/cuisines/indian.astro:8buku7">
               <img
                 src={recipe.data.image}
                 alt={recipe.data.title}
@@ -50,23 +50,23 @@ const jsonLd = {
                 </span>
               </div>
             </div>
-            <div class="p-8" data-ps="src/pages/cuisines/indian.astro:8buku9">
-              <span class="inline-block px-4 py-1.5 bg-red-50 text-red-600 text-xs font-black uppercase tracking-widest rounded-full mb-4" data-ps="src/pages/cuisines/indian.astro:xhe1jz">
-                {name}
-              </span>
-              <h3 class="text-2xl font-black text-zinc-900 leading-tight group-hover:text-red-600 transition-colors mb-4 italic" data-ps="src/pages/cuisines/indian.astro:zbjh1h">
-                {recipe.data.title}
-              </h3>
-              <p class="text-zinc-500 line-clamp-2 leading-relaxed mb-6" data-ps="src/pages/cuisines/indian.astro:3gwrlj">
-                {recipe.data.description}
-              </p>
-              <div class="flex items-center justify-between gap-3 mt-auto pt-6 border-t border-zinc-50" data-ps="src/pages/cuisines/indian.astro:8bukua">
-                <span class="text-sm font-bold text-red-600 uppercase tracking-widest flex items-center gap-2 group-hover:gap-3 transition-all" data-ps="src/pages/cuisines/indian.astro:xhe1k0">
-                  View recipe
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
-                </span>
-                <span class="text-sm font-bold text-zinc-400 uppercase tracking-wider" data-ps="src/pages/cuisines/indian.astro:xhe1k1">{recipe.data.pubDate?.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-              </div>
+            <div class="p-4 md:p-8" data-ps="src/pages/cuisines/indian.astro:8buku9">
+            <span class="inline-block px-3 py-1 md:px-4 md:py-1.5 bg-red-50 text-red-600 text-[10px] md:text-xs font-black uppercase tracking-widest rounded-full mb-2 md:mb-4" data-ps="src/pages/cuisines/indian.astro:xhe1jz">
+            {name}
+            </span>
+            <h3 class="text-lg md:text-2xl font-black text-zinc-900 leading-tight group-hover:text-red-600 transition-colors mb-2 md:mb-4 italic line-clamp-2 md:line-clamp-none" data-ps="src/pages/cuisines/indian.astro:zbjh1h">
+            {recipe.data.title}
+            </h3>
+            <p class="hidden md:block text-zinc-500 line-clamp-2 leading-relaxed mb-6" data-ps="src/pages/cuisines/indian.astro:3gwrlk">
+            {recipe.data.description}
+            </p>
+            <div class="flex items-center justify-between gap-3 mt-auto pt-4 md:pt-6 border-t border-zinc-50" data-ps="src/pages/cuisines/indian.astro:8bukua">
+            <span class="text-[10px] md:text-sm font-bold text-red-600 uppercase tracking-widest flex items-center gap-1 md:gap-2 group-hover:gap-3 transition-all" data-ps="src/pages/cuisines/indian.astro:xhe1k0">
+            View <span class="hidden sm:inline" data-ps="src/pages/cuisines/indian.astro:qa8uy3">recipe</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="md:w-4 md:h-4"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+            </span>
+            <span class="text-[10px] md:text-sm font-bold text-zinc-400 uppercase tracking-wider" data-ps="src/pages/cuisines/indian.astro:xhe1k1">{recipe.data.pubDate?.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+            </div>
             </div>
           </a>
         ))}

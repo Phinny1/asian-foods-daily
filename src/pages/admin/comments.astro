@@ -77,7 +77,8 @@ if (isAuthenticated) {
 }
 ---
 
-<Layout title="Comment Management Dashboard">
+<Layout title="Comment Management Dashboard" noindex={true}>
+  {/* Admin Dashboard - Noindex applied via Layout prop and URL check */}
   <div class="max-w-6xl mx-auto px-4 py-12" data-ps="src/pages/admin/comments.astro:yowhg2">
     <div class="flex justify-between items-center mb-8" data-ps="src/pages/admin/comments.astro:yowhg3">
       <h1 class="text-3xl font-bold" data-ps="src/pages/admin/comments.astro:p4zxvd">Comment Management</h1>
