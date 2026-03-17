@@ -9,13 +9,10 @@ const blogSchema = z.object({
   category: z.string().optional(),
   tags: z.array(z.string()).optional().nullable(),
   draft: z.boolean().default(false),
-  noindex: z.boolean().optional(),
-  canonicalUrl: z.string().optional(),
   // Additional fields for scraped/imported content
   schemaType: z.string().optional(),
   schemaData: z.any().optional(),
   updatedDate: z.coerce.date().optional(),
-  toc: z.boolean().optional(),
 });
 
 const blog = defineCollection({

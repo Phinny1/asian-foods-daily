@@ -45,7 +45,7 @@ const currentTags = Array.isArray(frontmatter.tags) ? frontmatter.tags.map((t: a
 const currentTitleWords = frontmatter.title ? frontmatter.title.toLowerCase().split(/\s+/).filter((w: string) => w.length > 3) : [];
 
 const otherRecipes = allRecipes
-  .filter(r => r.id.replace(/\.mdx?$/, '') !== currentSlug) // Exclude current post
+  .filter(r => r.slug !== currentSlug) // Exclude current post
   .map(r => {
     let score = 0;
     const rData = r.data;
@@ -70,7 +70,7 @@ const otherRecipes = allRecipes
 
     return {
       title: rData.title,
-      slug: r.id.replace(/\.mdx?$/, ''),
+      slug: r.slug,
       image: rData.image,
       category: rData.category,
       score
