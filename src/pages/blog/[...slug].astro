@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import BlogLayout from '../../layouts/BlogLayout.astro';
 
 export async function getStaticPaths() {
@@ -8,14 +8,14 @@ export async function getStaticPaths() {
   const blogEntries = await getCollection('blog', filterFn);
 
   return blogEntries.map(entry => ({
-    params: { slug: entry.slug },
+    params: { slug: entry.id },
     props: { entry, collectionName: 'blog' },
   }));
 }
 
 const { entry, collectionName } = Astro.props;
-const { Content, headings } = await entry.render();
-const mdxFilePath = `src/content/${collectionName}/${entry.slug}.mdx`;
+const { Content, headings } = await render(entry);
+const mdxFilePath = `src/content/${collectionName}/${entry.id}.mdx`;
 ---
 
 <BlogLayout frontmatter={entry.data} mdxFilePath={mdxFilePath} headings={headings}>
