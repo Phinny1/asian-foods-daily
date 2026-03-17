@@ -1,11 +1,18 @@
 User-agent: *
-Disallow: /
+Allow: /
 
-# Specific AI Bot rules
-User-agent: GPTBot
-Disallow: /
+# AI Search crawlers (Allow - provides citations)
+User-agent: OAI-SearchBot
+Allow: /
 
 User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+# AI Training crawlers (Block)
+User-agent: GPTBot
 Disallow: /
 
 User-agent: Google-Extended
@@ -18,7 +25,4 @@ User-agent: Anthropic-AI
 Disallow: /
 
 User-agent: Claude-Web
-Disallow: /
-
-User-agent: PerplexityBot
 Disallow: /
