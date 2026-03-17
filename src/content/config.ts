@@ -13,7 +13,6 @@ const blogSchema = z.object({
   schemaType: z.string().optional(),
   schemaData: z.any().optional(),
   updatedDate: z.coerce.date().optional(),
-  canonicalUrl: z.string().optional(),
 });
 
 const blog = defineCollection({
