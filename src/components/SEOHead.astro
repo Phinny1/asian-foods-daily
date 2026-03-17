@@ -10,7 +10,9 @@ export interface Props {
   image?: string;
   type?: string;
   publishedTime?: string;
-  jsonLd?: Record<string, any>;
+  modifiedTime?: string;
+  canonicalUrl?: string;
+  jsonLd?: Record<string, any> | any[];
 }
 
 const {
@@ -19,6 +21,8 @@ const {
   image,
   type = 'website',
   publishedTime,
+  modifiedTime,
+  canonicalUrl: canonicalUrlProp,
   jsonLd,
 } = Astro.props;
 
@@ -36,7 +40,7 @@ const autoImage = (ACCOUNT_ID && SITE_ID)
   : (SITE.brand?.logo || `/${slug === 'index' ? 'home' : slug.split('/')[0]}-og.jpg`);
 const finalImage = image || autoImage;
 
-const canonicalURL = new URL(Astro.url.pathname, SITE.url);
+const canonicalURL = canonicalUrlProp ? new URL(canonicalUrlProp, SITE.url) : new URL(Astro.url.pathname, SITE.url);
 const ogImageURL = finalImage.startsWith('http') ? finalImage : new URL(finalImage, SITE.url).toString();
 
 // Cast SITE to any to access properties that might not be in the type definition yet
@@ -61,6 +65,7 @@ const twitterHandle = (SITE as any).twitterHandle || '';
 <meta property="og:image" content={ogImageURL} />
 <meta property="og:image:alt" content={title} />
 {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+{modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
@@ -83,6 +88,10 @@ const twitterHandle = (SITE as any).twitterHandle || '';
 ></script>
 
 <!-- Structured Data / JSON-LD -->
-{jsonLd && (
+{jsonLd && Array.isArray(jsonLd) ? (
+  jsonLd.map((item: any, i: number) => (
+    <script type="application/ld+json" set:html={JSON.stringify(item)} />
+  ))
+) : jsonLd ? (
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-)}
+) : null}
