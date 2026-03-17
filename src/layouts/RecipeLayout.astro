@@ -8,7 +8,7 @@ import { SITE } from '../config/site';
 import Comments from '../components/Comments.astro';
 import ShareButtons from '../components/ShareButtons.astro';
 import { RecipeSlider } from '../components/islands/RecipeSlider';
-import { getCollection } from 'astro:content';
+// import { getCollection } from 'astro:content'; // Removed to fix build error
 
 interface Heading {
   depth: number;
@@ -16,10 +16,11 @@ interface Heading {
   text: string;
 }
 
-const { frontmatter: frontmatterProp, mdxFilePath = '', headings = [], ...props } = Astro.props as {
+const { frontmatter: frontmatterProp, mdxFilePath = '', headings = [], otherRecipes = [], ...props } = Astro.props as {
   frontmatter?: any;
   mdxFilePath?: string;
   headings?: Heading[];
+  otherRecipes?: any[];
   [key: string]: any;
 };
 const frontmatter = frontmatterProp || props;
@@ -55,18 +56,6 @@ const { entry } = Astro.props;
 
 // Helper to extract step images - removed as we now use main hero image for all steps
 const stepImages: string[] = []; 
-
-// Fetch other recipes for the slider
-const allRecipes = await getCollection('recipes');
-const otherRecipes = allRecipes
-  .filter(r => r.slug !== entry.slug)
-  .map(r => ({
-    title: r.data.title,
-    slug: r.slug,
-    image: r.data.image,
-    category: r.data.category
-  }))
-  .sort(() => Math.random() - 0.5); // Randomize for "Explore" feel
 
 // Breadcrumb data
 const categorySlug = cuisine ? cuisine.toLowerCase().replace(/\s+/g, '-') : '';

@@ -7,17 +7,38 @@ export async function getStaticPaths() {
 
   const recipesEntries = await getCollection('recipes', filterFn);
 
-  return recipesEntries.map(entry => ({
-    params: { slug: entry.slug },
-    props: { entry, collectionName: 'recipes' },
-  }));
+  return recipesEntries.map(entry => {
+    // Pre-calculate other recipes for the slider to avoid getCollection issues in render phase
+    const otherRecipes = recipesEntries
+      .filter(r => r.slug !== entry.slug)
+      .map(r => ({
+        title: r.data.title,
+        slug: r.slug,
+        image: r.data.image,
+        category: r.data.category
+      }))
+      // Randomize. Note: Since this runs at build time, the order is fixed for the build.
+      // But it's better than build failing.
+      .sort(() => Math.random() - 0.5);
+
+    return {
+      params: { slug: entry.slug },
+      props: { entry, collectionName: 'recipes', otherRecipes },
+    };
+  });
 }
 
-const { entry, collectionName } = Astro.props;
+const { entry, collectionName, otherRecipes } = Astro.props;
 const { Content, headings } = await entry.render();
 const mdxFilePath = `src/content/${collectionName}/${entry.slug}.mdx`;
 ---
 
-<RecipeLayout frontmatter={entry.data} mdxFilePath={mdxFilePath} headings={headings} entry={entry}>
+<RecipeLayout 
+  frontmatter={entry.data} 
+  mdxFilePath={mdxFilePath} 
+  headings={headings} 
+  entry={entry}
+  otherRecipes={otherRecipes}
+>
   <Content />
 </RecipeLayout>
