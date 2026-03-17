@@ -1,0 +1,62 @@
+name: Fix Pagesmith Slug Issue
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/pages/blog/[...slug].astro'
+      - 'src/pages/recipes/[...slug].astro'
+
+jobs:
+  fix-slugs:
+    runs-on: ubuntu-latest
+    # Skip if this commit was already made by this action
+    if: github.actor != 'github-actions[bot]'
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fix .mdx extension in blog slug route
+        run: |
+          node -e "
+          const fs = require('fs');
+
+          // Fix blog [...slug].astro
+          let blog = fs.readFileSync('src/pages/blog/[...slug].astro', 'utf8');
+          blog = blog.replace(
+            /params:\s*\{\s*slug:\s*entry\.id\s*\}/g,
+            \"params: { slug: entry.id.replace(/\\\\.mdx?\$/, '') }\"
+          );
+          blog = blog.replace(
+            /\\\`src\/content\/\\\${collectionName}\/\\\${entry\.id}\.mdx\\\`/g,
+            '\`src/content/\${collectionName}/\${entry.id}\`'
+          );
+          fs.writeFileSync('src/pages/blog/[...slug].astro', blog);
+
+          // Fix recipes [...slug].astro
+          let recipes = fs.readFileSync('src/pages/recipes/[...slug].astro', 'utf8');
+          recipes = recipes.replace(
+            /params:\s*\{\s*slug:\s*entry\.id\s*\}/g,
+            \"params: { slug: entry.id.replace(/\\\\.mdx?\$/, '') }\"
+          );
+          recipes = recipes.replace(
+            /slug:\s*r\.id,/g,
+            \"slug: r.id.replace(/\\\\.mdx?\$/, ''),\"
+          );
+          recipes = recipes.replace(
+            /\\\`src\/content\/\\\${collectionName}\/\\\${entry\.id}\.mdx\\\`/g,
+            '\`src/content/\${collectionName}/\${entry.id}\`'
+          );
+          fs.writeFileSync('src/pages/recipes/[...slug].astro', recipes);
+
+          console.log('Files patched successfully');
+          "
+
+      - name: Commit fix if needed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "src/pages/blog/[...slug].astro" "src/pages/recipes/[...slug].astro"
+          git diff --staged --quiet && echo "No changes needed" || git commit -m "Auto-fix: strip .mdx extension from entry.id slugs" && git push
