@@ -7,6 +7,8 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 Disallow: /*?utm_
+Disallow: /*?register=1
+Disallow: /*?elementor_library=elementor-archive-887
 
 # Google
 User-agent: Googlebot
