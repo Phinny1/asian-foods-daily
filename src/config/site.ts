@@ -1,5 +1,6 @@
 export const siteConfig = {
   title: "Asian Foods Daily",
+  name: "Asian Foods Daily",
   description: "Discover authentic Asian food recipes, step-by-step cooking guides, and delicious ideas for appetizers, noodles, soups, desserts & more",
   url: "https://www.asianfoodsdaily.com",
   brand: {
