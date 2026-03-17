@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import RecipeLayout from '../../layouts/RecipeLayout.astro';
 
 export async function getStaticPaths() {
@@ -10,10 +10,10 @@ export async function getStaticPaths() {
   return recipesEntries.map(entry => {
     // Pre-calculate other recipes for the slider to avoid getCollection issues in render phase
     const otherRecipes = recipesEntries
-      .filter(r => r.slug !== entry.slug)
+      .filter(r => r.id !== entry.id)
       .map(r => ({
         title: r.data.title,
-        slug: r.slug,
+        slug: r.id,
         image: r.data.image,
         category: r.data.category
       }))
@@ -22,15 +22,15 @@ export async function getStaticPaths() {
       .sort(() => Math.random() - 0.5);
 
     return {
-      params: { slug: entry.slug },
+      params: { slug: entry.id },
       props: { entry, collectionName: 'recipes', otherRecipes },
     };
   });
 }
 
 const { entry, collectionName, otherRecipes } = Astro.props;
-const { Content, headings } = await entry.render();
-const mdxFilePath = `src/content/${collectionName}/${entry.slug}.mdx`;
+const { Content, headings } = await render(entry);
+const mdxFilePath = `src/content/${collectionName}/${entry.id}.mdx`;
 ---
 
 <RecipeLayout 
