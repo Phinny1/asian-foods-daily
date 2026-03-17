@@ -8,14 +8,14 @@ export async function getStaticPaths() {
   const blogEntries = await getCollection('blog', filterFn);
 
   return blogEntries.map(entry => ({
-    params: { slug: entry.id.replace(/\.mdx?$/, '') },
+    params: { slug: entry.id },
     props: { entry, collectionName: 'blog' },
   }));
 }
 
 const { entry, collectionName } = Astro.props;
 const { Content, headings } = await render(entry);
-const mdxFilePath = `src/content/${collectionName}/${entry.id}`;
+const mdxFilePath = `src/content/${collectionName}/${entry.id}.mdx`;
 ---
 
 <BlogLayout frontmatter={entry.data} mdxFilePath={mdxFilePath} headings={headings}>
