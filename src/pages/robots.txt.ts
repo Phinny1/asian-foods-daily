@@ -1,16 +1,16 @@
 import type { APIRoute } from 'astro';
 
-import { SITE } from '../config/site';
-
-export const GET: APIRoute = () => {
-  const content = `User-agent: *
+export const GET: APIRoute = ({ site }) => {
+  const sitemapURL = new URL('sitemap-index.xml', site);
+  return new Response(
+    `User-agent: *
 Allow: /
 
-Sitemap: ${new URL('/sitemap-index.xml', SITE.url)}`;
-
-  return new Response(content, {
-    headers: {
-      'Content-Type': 'text/plain; charset=utf-8',
-    },
-  });
+Sitemap: ${sitemapURL.href}`,
+    {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+      },
+    }
+  );
 };

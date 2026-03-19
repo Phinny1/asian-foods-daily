@@ -29,6 +29,12 @@ export async function getStaticPaths() {
 }
 
 const { entry, collectionName, otherRecipes } = Astro.props;
+
+// If entry is not passed (which shouldn't happen with getStaticPaths), redirect
+if (!entry) {
+  return Astro.redirect('/404');
+}
+
 const { Content, headings } = await entry.render();
 const mdxFilePath = `src/content/${collectionName}/${entry.slug}.mdx`;
 ---
