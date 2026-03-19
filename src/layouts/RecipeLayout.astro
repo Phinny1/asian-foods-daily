@@ -222,9 +222,6 @@ const jsonLd = {
     breadcrumbSchema
   ]
 };
-
-// Extra per-page JSON-LD blocks (array of raw schema objects from frontmatter)
-const customSchemas: any[] = frontmatter.customSchemas || [];
 ---
 
 <!doctype html>
@@ -241,9 +238,6 @@ const customSchemas: any[] = frontmatter.customSchemas || [];
       canonicalUrl={frontmatter.canonicalUrl}
       jsonLd={jsonLd}
     />
-    {customSchemas.map((schema) => (
-      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
-    ))}
   </head>
   <body class="min-h-screen bg-white" style="color: var(--text);" data-ps="src/layouts/RecipeLayout.astro:body">
     <Navigation />
