@@ -84,5 +84,9 @@ const twitterHandle = (SITE as any).twitterHandle || '';
 
 <!-- Structured Data / JSON-LD -->
 {jsonLd && (
-  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  Array.isArray(jsonLd)
+    ? jsonLd.map((schema) => (
+        <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+      ))
+    : <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 )}

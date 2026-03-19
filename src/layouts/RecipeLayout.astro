@@ -215,13 +215,48 @@ const breadcrumbSchema = {
 };
 
 // Combine into graph
-const jsonLd = {
+const recipeGraphSchema = {
   '@context': 'https://schema.org',
   '@graph': [
     recipeSchema,
     breadcrumbSchema
   ]
 };
+
+// Nasi goreng page-specific schemas
+const nasiGorengPath = '/recipes/authentic-nasi-goreng-recipe-indonesian-fried-rice-with-leftover-rice/';
+const isNasiGoreng = Astro.url.pathname === nasiGorengPath || Astro.url.pathname === nasiGorengPath.slice(0, -1);
+
+const nasiGorengBlogPosting = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: "Authentic Nasi Goreng Recipe: Indonesia's Ultimate Fried Rice (2025 Guide)",
+  description: 'Make authentic nasi goreng with kecap manis, terasi & day-old jasmine rice. Step-by-step guide, pro tips, regional variations & FAQ. Ready in 30 min.',
+  image: 'https://cdn.pagesmith.app/97394d4a/images/authentic-nasi-goreng-recipe-1536.webp',
+  author: { '@type': 'Person', name: 'Asha', url: 'https://www.asianfoodsdaily.com/about/' },
+  publisher: { '@type': 'Organization', name: 'Asian Foods Daily', url: 'https://www.asianfoodsdaily.com', logo: { '@type': 'ImageObject', url: 'https://www.asianfoodsdaily.com/logo.png' } },
+  datePublished: '2026-01-26',
+  dateModified: '2026-01-26',
+  mainEntityOfPage: 'https://www.asianfoodsdaily.com/recipes/authentic-nasi-goreng-recipe-indonesian-fried-rice-with-leftover-rice/'
+};
+
+const nasiGorengFAQ = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: 'What makes nasi goreng different from other fried rice dishes?', acceptedAnswer: { '@type': 'Answer', text: "Nasi goreng is defined by three uniquely Indonesian ingredients: kecap manis (sweet soy sauce), terasi (fermented shrimp paste), and a spice paste of shallots, garlic, and bird's eye chilies. This gives it a smokier, sweeter, and funkier profile compared to Chinese or Thai fried rice." } },
+    { '@type': 'Question', name: 'Can I use freshly cooked rice for nasi goreng?', acceptedAnswer: { '@type': 'Answer', text: 'Freshly cooked rice is too moist and tends to clump in the wok. Day-old rice refrigerated overnight gives the best texture. If using fresh rice, refrigerate uncovered for at least 2 hours before cooking.' } },
+    { '@type': 'Question', name: 'Is terasi shrimp paste essential for authentic nasi goreng?', acceptedAnswer: { '@type': 'Answer', text: 'Terasi provides the deep, funky umami backbone central to authentic nasi goreng. For vegetarians, miso paste is the best substitute.' } },
+    { '@type': 'Question', name: 'How do I find kecap manis in the US or UK?', acceptedAnswer: { '@type': 'Answer', text: 'Kecap manis is available at Asian grocery stores, international supermarkets, and online retailers. Look for brands like ABC, Bango, or Conimex.' } },
+    { '@type': 'Question', name: 'Can nasi goreng be made gluten-free?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Replace kecap manis with tamari mixed with palm sugar or maple syrup, and use gluten-free tamari instead of regular soy sauce.' } },
+    { '@type': 'Question', name: 'Why does restaurant nasi goreng taste better than homemade?', acceptedAnswer: { '@type': 'Answer', text: 'Three reasons: higher flame, well-seasoned carbon steel woks, and years of practiced technique. At home, maximize your burner and cook in small batches.' } },
+    { '@type': 'Question', name: 'What protein works best in nasi goreng?', acceptedAnswer: { '@type': 'Answer', text: 'Chicken thighs are the most popular choice. Prawns cook beautifully with kecap manis. For plant-based, crispy tofu or tempeh are traditional Indonesian alternatives.' } }
+  ]
+};
+
+const jsonLd = isNasiGoreng
+  ? [recipeGraphSchema, nasiGorengBlogPosting, nasiGorengFAQ]
+  : recipeGraphSchema;
 ---
 
 <!doctype html>
